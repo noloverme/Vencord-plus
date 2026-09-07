@@ -85,7 +85,8 @@ export default {
             if (!IS_DEV) return;
 
             ipcRenderer.on(IpcEvents.RENDERER_CSS_UPDATE, (_e, newCss: string) => cb(newCss));
-        }
+        },
+        toggleDevTools: () => invoke<void>(IpcEvents.TOGGLE_DEVTOOLS)
     },
 
     csp: {

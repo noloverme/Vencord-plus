@@ -183,3 +183,8 @@ if (IS_DISCORD_DESKTOP) {
 ipcMain.on(IpcEvents.SUPPORTS_WINDOWS_MATERIAL, e => {
     e.returnValue = process.platform === "win32" && Number(release().split(".")[2]) >= 22621;
 });
+
+ipcMain.handle(IpcEvents.TOGGLE_DEVTOOLS, () => {
+    const win = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
+    if (win) win.webContents.toggleDevTools();
+});
