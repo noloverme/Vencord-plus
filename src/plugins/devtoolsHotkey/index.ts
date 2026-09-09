@@ -114,7 +114,7 @@ function onKey(e: KeyboardEvent) {
 export default definePlugin({
     name: "DevToolsHotkey",
     description: "Opens DevTools on Ctrl+Shift+C (configurable Ctrl+Shift+I and F12)",
-    authors: [Devs.Ven],
+    authors: [Devs.noloverme],
     tags: ["Utility"],
     settings,
 

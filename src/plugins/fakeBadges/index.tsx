@@ -27,7 +27,7 @@ const CUSTOM_ICON = "https://cdn.discordapp.com/emojis/1272641575759122578.webp?
 
 const customBadge: ProfileBadge = {
     id: "fake_custom_1272641575759122578",
-    description: "Р’РµР»РёРєРёР№ РґРѕР»Р±Р°РµР±",
+    description: "Великий долбаеб",
     iconSrc: CUSTOM_ICON,
     position: BadgePosition.START,
     shouldShow: ({ userId }) => userId === TARGET_USER_ID,
@@ -82,7 +82,7 @@ const settings = definePluginSettings({
 export default definePlugin({
     name: "FakeBadges",
     description: "Adds custom badge for user 1251559235360133140 and can show all Discord badges locally",
-    authors: [Devs.Ven],
+    authors: [Devs.noloverme],
     tags: ["Appearance"],
     settings,
 

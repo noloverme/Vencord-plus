@@ -411,8 +411,8 @@ function removeFloatingButton() {
 
 export default definePlugin({
     name: "QuestRunner",
-    description: "Добавляет кнопку 'Выполнить задачи' с логами и кнопками Запустить/Остановить/Очистить для автоквестов",
-    authors: [Devs.Ven],
+    description: "Adds a 'Complete Tasks' button with logs for auto quests",
+    authors: [Devs.noloverme],
     tags: ["Utility"],
     // Add toolbox button as alternative
     toolboxActions: {
