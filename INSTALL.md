@@ -15,10 +15,10 @@
    git clone https://github.com/noloverme/Vencord-plus.git
    cd Vencord-plus
    ```
-3. Собери:
+3. Собери (важно: `buildStandalone`, иначе проверка обновлений будет искать `.git` и падать с `fatal: not a git repository`):
    ```powershell
    pnpm install
-   pnpm build
+   pnpm buildStandalone
    ```
 4. Внедри в Discord (закрый Discord полностью перед этим, запускай от Админа):
    ```powershell
@@ -41,9 +41,9 @@
 ## Обновление после изменения плагина
 
 ```powershell
-pnpm build
+pnpm buildStandalone
 Copy-Item -Path ".\dist\*" -Destination "$env:APPDATA\Vencord\dist\" -Recurse -Force
-# перезапусти Discord
+# перезапусти Discord (или Ctrl+R)
 ```
 
 ## Можно ли сделать установщик?
