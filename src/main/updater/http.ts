@@ -42,27 +42,66 @@ async function githubGet<T = any>(endpoint: string) {
     });
 }
 
+function extractHashFromReleaseName(name: string): string | null {
+    // Upstream format: "DevBuild 0850f37", fork format: "Vencord-plus 27e9c73" / "v1.0.1 27e9c73"
+    const m = /(?:^|\s)([0-9a-f]{7,40})\s*$/i.exec(name.trim());
+    return m ? m[1].slice(0, 7) : null;
+}
+
+async function resolveReleaseHash(release: any): Promise<string | null> {
+    const fromName = release?.name ? extractHashFromReleaseName(String(release.name)) : null;
+    if (fromName) return fromName;
+
+    // Fallback for releases named plain "v1.0.1": resolve the tag to a commit sha
+    const tag = release?.tag_name ? String(release.tag_name) : null;
+    if (tag) {
+        try {
+            const commit = await githubGet(`/commits/${encodeURIComponent(tag)}`);
+            if (commit?.sha) return String(commit.sha).slice(0, 7);
+        } catch { }
+    }
+    return null;
+}
+
 async function calculateGitChanges() {
     const isOutdated = await fetchUpdates();
     if (!isOutdated) return [];
 
-    const data = await githubGet(`/compare/${gitHash}...HEAD`);
+    try {
+        const data = await githubGet(`/compare/${gitHash}...HEAD`);
 
-    return data.commits.map((c: any) => ({
-        // github api only sends the long sha
-        hash: c.sha.slice(0, 7),
-        author: c.author?.login ?? c.commit?.author?.name ?? "Unknown Author",
-        message: c.commit.message.split("\n")[0]
-    }));
+        return data.commits.map((c: any) => ({
+            // github api only sends the long sha
+            hash: c.sha.slice(0, 7),
+            author: c.author?.login ?? c.commit?.author?.name ?? "Unknown Author",
+            message: c.commit.message.split("\n")[0]
+        }));
+    } catch (err) {
+        // Compare fails when local hash is not in the remote history
+        // (shallow/custom builds). Still report an update so the UI
+        // offers to download the latest release assets.
+        const latest: any = await githubGet("/releases/latest").catch(() => null);
+        const body: string = latest?.body ? String(latest.body) : String((err as Error)?.message ?? err);
+        return [{
+            hash: latest ? (await resolveReleaseHash(latest) ?? "latest") : "latest",
+            author: latest?.author?.login ?? "Unknown Author",
+            message: body.split("\n")[0].slice(0, 200) || "New release available"
+        }];
+    }
 }
 
 async function fetchUpdates() {
+    // Reset on every check, otherwise repeated checks duplicate entries
+    PendingUpdates = [];
+
     const data = await githubGet("/releases/latest");
 
-    const hash = data.name.slice(data.name.lastIndexOf(" ") + 1);
-    if (hash === gitHash)
+    const hash = await resolveReleaseHash(data);
+    if (hash && hash === gitHash.slice(0, 7))
         return false;
 
+    // If the release has no resolvable hash (old custom release),
+    // still treat as outdated so users can update once to the fixed naming.
     data.assets.forEach(({ name, browser_download_url }) => {
         if (VENCORD_FILES.some(s => name.startsWith(s))) {
             PendingUpdates.push([name, browser_download_url]);

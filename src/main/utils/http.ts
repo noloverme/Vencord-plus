@@ -22,28 +22,90 @@ import { finished } from "stream/promises";
 
 type Url = string | URL;
 
-export async function checkedFetch(url: Url, options?: RequestInit) {
+const REQUEST_TIMEOUT_MS = 25000;
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 750;
+
+function getFetcher(): typeof fetch {
     try {
-        var res = await fetch(url, options);
-    } catch (err) {
-        if (err instanceof Error && err.cause) {
-            err = err.cause;
+        // Electron's net.fetch respects system proxy settings,
+        // while Node's global fetch (undici) does not and fails
+        // with ConnectTimeoutError behind proxies / VPN / DPI tools.
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { net } = require("electron");
+        if (net?.fetch) return net.fetch.bind(net);
+    } catch { }
+    return fetch;
+}
+
+function withTimeout(signal?: AbortSignal | null): AbortSignal {
+    const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+    if (!signal) return timeout;
+    const anySignal = (AbortSignal as any).any;
+    return typeof anySignal === "function" ? anySignal.call(AbortSignal, [signal, timeout]) : timeout;
+}
+
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+function isRetryableError(err: unknown, res?: Response) {
+    if (res) {
+        // Retry on rate limits and transient server errors
+        return res.status === 429 || res.status >= 500;
+    }
+    const msg = String(err);
+    return /ConnectTimeout|Timeout|ECONNRESET|ENOTFOUND|EAI_AGAIN|EPIPE|UND_ERR|fetch failed/i.test(msg);
+}
+
+export async function checkedFetch(url: Url, options?: RequestInit, retries = MAX_RETRIES) {
+    const fetcher = getFetcher();
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        let res: Response;
+        try {
+            res = await fetcher(url as string, {
+                ...options,
+                signal: withTimeout(options?.signal)
+            });
+        } catch (err) {
+            if (err instanceof Error && err.cause) {
+                err = err.cause;
+            }
+            lastError = err;
+
+            const method = options?.method ?? "GET";
+            if (attempt < retries && isRetryableError(err)) {
+                await sleep(RETRY_DELAY_MS * (attempt + 1));
+                continue;
+            }
+
+            throw new Error(
+                `${method} ${url} failed: ${err}\n` +
+                "Hint: check VPN / antivirus / firewall / DPI-bypass tools (GoodbyeDPI, zapret) - they often block Electron's network but not the browser."
+            );
         }
 
-        throw new Error(`${options?.method ?? "GET"} ${url} failed: ${err}`);
+        if (res!.ok) {
+            return res!;
+        }
+
+        // Retry transient HTTP errors once
+        if (attempt < retries && isRetryableError(lastError, res!)) {
+            try { await res!.text(); } catch { }
+            await sleep(RETRY_DELAY_MS * (attempt + 1));
+            continue;
+        }
+
+        let message = `${options?.method ?? "GET"} ${url}: ${res!.status} ${res!.statusText}`;
+        try {
+            const reason = await res!.text();
+            message += `\n${reason}`;
+        } catch { }
+
+        throw new Error(message);
     }
 
-    if (res.ok) {
-        return res;
-    }
-
-    let message = `${options?.method ?? "GET"} ${url}: ${res.status} ${res.statusText}`;
-    try {
-        const reason = await res.text();
-        message += `\n${reason}`;
-    } catch { }
-
-    throw new Error(message);
+    throw lastError instanceof Error ? lastError : new Error(`GET ${url} failed after ${retries + 1} attempts: ${lastError}`);
 }
 
 export async function fetchJson<T = any>(url: Url, options?: RequestInit) {

@@ -1,0 +1,74 @@
+name: Build Vencord-plus release
+# Fork workflow for noloverme/Vencord-plus.
+# Upstream build.yml only uploads for Vendicated/Vencord, so this workflow
+# builds --standalone and (re)creates a release whose TITLE ends with the
+# short commit hash, which src/main/updater/http.ts requires
+# (e.g. "Vencord-plus 27e9c73").
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - .github/workflows/build-fork.yml
+            - src/**
+            - browser/**
+            - scripts/build/**
+            - package.json
+            - pnpm-lock.yaml
+    workflow_dispatch:
+
+jobs:
+    BuildAndRelease:
+        if: github.repository == 'noloverme/Vencord-plus'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        env:
+            FORCE_COLOR: true
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: pnpm/action-setup@v6
+
+            - name: Use Node.js 24
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build standalone
+              run: pnpm build --standalone
+
+            - name: Generate plugin list
+              run: pnpm generatePluginJson dist/plugins.json dist/plugin-readmes.json || true
+
+            - name: Get release values
+              id: release_values
+              run: |
+                  echo "short_sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+                  echo "full_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+            - name: Create / update release with hash in title
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  SHORT_SHA: ${{ steps.release_values.outputs.short_sha }}
+                  FULL_SHA: ${{ steps.release_values.outputs.full_sha }}
+              run: |
+                  TAG="plus-${SHORT_SHA}"
+                  TITLE="Vencord-plus ${SHORT_SHA}"
+                  echo "Tag: $TAG / Title: $TITLE"
+
+                  if ! gh release view "$TAG" >/dev/null 2>&1; then
+                    gh release create "$TAG" --target "$FULL_SHA" --title "$TITLE" --notes "Vencord-plus standalone build for commit $FULL_SHA"
+                  else
+                    gh release edit "$TAG" --title "$TITLE"
+                  fi
+
+                  # Upload (clobber) all standalone assets so the in-app updater finds them
+                  gh release upload "$TAG" --clobber dist/patcher.js dist/preload.js dist/renderer.js dist/renderer.css dist/vencordDesktopMain.js dist/vencordDesktopPreload.js dist/vencordDesktopRenderer.js dist/vencordDesktopRenderer.css dist/plugins.json dist/plugin-readmes.json 2>/dev/null || gh release upload "$TAG" --clobber dist/*
+
+                  # Point `latest` at this release by marking it as latest (GitHub uses most recent non-prerelease)
+                  echo "Release $TAG ready. Mark it as latest manually if needed, or delete old v1.0.1 once verified."
