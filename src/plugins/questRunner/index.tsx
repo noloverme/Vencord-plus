@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Vencord, a modification for Discord's desktop app
  * Copyright (c) 2023 Vendicated and contributors
  *
@@ -14,15 +14,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+*/
 
 import { Flex } from "@components/Flex";
 import { Devs } from "@utils/constants";
 import { Margins } from "@utils/margins";
-import { ModalContent, ModalHeader, ModalProps, ModalRoot, openModal } from "@utils/modal";
 import definePlugin from "@utils/types";
-import { Button, Forms } from "@webpack/common";
-import { useState } from "@webpack/common";
+import type { RenderModalProps } from "@vencord/discord-types";
+import { Button, Forms, Modal, openModal, useState } from "@webpack/common";
 
 const EMOJI_URL = "https://cdn.discordapp.com/emojis/1227687255536042055.webp?size=128";
 
@@ -78,13 +77,14 @@ async function runQuests() {
 
     let ApplicationStreamingStore: any, RunningGameStore: any, QuestsStore: any, ChannelStore: any, GuildChannelStore: any, FluxDispatcher: any, api: any;
     try {
-        ApplicationStreamingStore = Object.values(wpRequire.c).find((x: any) => x?.exports?.A?.__proto__?.getStreamerActiveStreamMetadata)?.exports.A;
-        RunningGameStore = Object.values(wpRequire.c).find((x: any) => x?.exports?.Ay?.getRunningGames)?.exports.Ay;
-        QuestsStore = Object.values(wpRequire.c).find((x: any) => x?.exports?.A?.__proto__?.getQuest)?.exports.A;
-        ChannelStore = Object.values(wpRequire.c).find((x: any) => x?.exports?.A?.__proto__?.getAllThreadsForParent)?.exports.A;
-        GuildChannelStore = Object.values(wpRequire.c).find((x: any) => x?.exports?.Ay?.getSFWDefaultChannel)?.exports.Ay;
-        FluxDispatcher = Object.values(wpRequire.c).find((x: any) => x?.exports?.h?.__proto__?.flushWaitQueue)?.exports.h;
-        api = Object.values(wpRequire.c).find((x: any) => x?.exports?.Bo?.get)?.exports.Bo;
+        const modules = Object.values(wpRequire.c) as any[];
+        ApplicationStreamingStore = modules.find((x: any) => x?.exports?.A?.__proto__?.getStreamerActiveStreamMetadata)?.exports.A;
+        RunningGameStore = modules.find((x: any) => x?.exports?.Ay?.getRunningGames)?.exports.Ay;
+        QuestsStore = modules.find((x: any) => x?.exports?.A?.__proto__?.getQuest)?.exports.A;
+        ChannelStore = modules.find((x: any) => x?.exports?.A?.__proto__?.getAllThreadsForParent)?.exports.A;
+        GuildChannelStore = modules.find((x: any) => x?.exports?.Ay?.getSFWDefaultChannel)?.exports.Ay;
+        FluxDispatcher = modules.find((x: any) => x?.exports?.h?.__proto__?.flushWaitQueue)?.exports.h;
+        api = modules.find((x: any) => x?.exports?.Bo?.get)?.exports.Bo;
 
         if (!QuestsStore || !api) throw new Error("Не найдены QuestsStore/api");
     } catch (e) {
@@ -95,7 +95,7 @@ async function runQuests() {
 
     const supportedTasks = ["WATCH_VIDEO", "PLAY_ON_DESKTOP", "STREAM_ON_DESKTOP", "PLAY_ACTIVITY", "WATCH_VIDEO_ON_MOBILE"];
 
-    let quests: any[] = [...QuestsStore.quests.values()].filter((x: any) =>
+    const quests: any[] = [...QuestsStore.quests.values()].filter((x: any) =>
         x.userStatus?.enrolledAt &&
         !x.userStatus?.completedAt &&
         new Date(x.config.expiresAt).getTime() > Date.now() &&
@@ -103,7 +103,7 @@ async function runQuests() {
     );
 
     // @ts-ignore
-    let isApp = typeof DiscordNative !== "undefined";
+    const isApp = typeof DiscordNative !== "undefined";
 
     if (quests.length === 0) {
         addLog("У вас нет незавершённых квестов!");
@@ -127,7 +127,7 @@ async function runQuests() {
         }
 
         const pid = Math.floor(Math.random() * 30000) + 1000;
-        const questName = quest.config.messages.questName;
+        const { questName } = quest.config.messages;
         const taskConfig = quest.config.taskConfig ?? quest.config.taskConfigV2;
         const taskName = supportedTasks.find(x => taskConfig.tasks[x] != null);
         const taskData = taskConfig.tasks[taskName!];
@@ -147,7 +147,7 @@ async function runQuests() {
                 const speed = 7;
                 let completed = false;
 
-                let fn = async () => {
+                const fn = async () => {
                     try {
                         while (true) {
                             if (shouldStop) { addLog("Остановлено"); isRunning = false; return; }
@@ -185,7 +185,7 @@ async function runQuests() {
                     api.get({ url: `/applications/public?application_ids=${applicationId}` }).then((res: any) => {
                         try {
                             const appData = res.body[0];
-                            const exeName = appData.executables?.find((x: any) => x.os === "win32")?.name?.replace(">", "") ?? appData.name.replace(/[\/\\:*?"<>|]/g, "");
+                            const exeName = appData.executables?.find((x: any) => x.os === "win32")?.name?.replace(">", "") ?? appData.name.replace(/[/\\:*?"<>|]/g, "");
                             const fakeGame = {
                                 cmdLine: `C:\\Program Files\\${appData.name}\\${exeName}`,
                                 exeName,
@@ -221,8 +221,8 @@ async function runQuests() {
                                     games: []
                                 });
                             };
-                            let fn = (data: any) => {
-                                let progress = quest.config.configVersion === 1
+                            const fn = (data: any) => {
+                                const progress = quest.config.configVersion === 1
                                     ? data.userStatus.streamProgressSeconds
                                     : Math.floor(data.userStatus.progress.PLAY_ON_DESKTOP.value);
                                 addLog(`Прогресс: ${progress}/${secondsNeeded}`);
@@ -245,16 +245,16 @@ async function runQuests() {
                     addLog(`Не работает в браузере для "${questName}". Нужен десктоп!`);
                     doJob();
                 } else {
-                    let realFunc = ApplicationStreamingStore.getStreamerActiveStreamMetadata;
+                    const realFunc = ApplicationStreamingStore.getStreamerActiveStreamMetadata;
                     ApplicationStreamingStore.getStreamerActiveStreamMetadata = () => ({
                         id: applicationId,
                         pid,
                         sourceName: null
                     });
                     currentCleanup = () => { ApplicationStreamingStore.getStreamerActiveStreamMetadata = realFunc; };
-                    let fn = (data: any) => {
+                    const fn = (data: any) => {
                         try {
-                            let progress = quest.config.configVersion === 1
+                            const progress = quest.config.configVersion === 1
                                 ? data.userStatus.streamProgressSeconds
                                 : Math.floor(data.userStatus.progress.STREAM_ON_DESKTOP.value);
                             addLog(`Прогресс стрим: ${progress}/${secondsNeeded}`);
@@ -273,9 +273,9 @@ async function runQuests() {
 
             } else if (taskName === "PLAY_ACTIVITY") {
                 const channelId = ChannelStore.getSortedPrivateChannels()[0]?.id ??
-                    Object.values(GuildChannelStore.getAllGuilds()).find((x: any) => x != null && x.VOCAL.length > 0)?.VOCAL[0].channel.id;
+                    (Object.values(GuildChannelStore.getAllGuilds()) as any[]).find((x: any) => x != null && x.VOCAL.length > 0)?.VOCAL[0].channel.id;
                 const streamKey = `call:${channelId}:1`;
-                let fn = async () => {
+                const fn = async () => {
                     try {
                         addLog(`Выполняем "${questName}" (activity)`);
                         while (true) {
@@ -320,7 +320,7 @@ function stopQuests() {
     setTimeout(() => { isRunning = false; addLog("Остановлено"); }, 1000);
 }
 
-function QuestModal(props: ModalProps) {
+function QuestModal(props: RenderModalProps) {
     const [tick, setTick] = useState(0);
     const [logState, setLogState] = useState(getLogs());
 
@@ -332,7 +332,7 @@ function QuestModal(props: ModalProps) {
     });
 
     // simple effect
-    const React = (window as any).React;
+    const { React } = (window as any);
     React.useEffect(() => {
         const cb = () => setLogState(getLogs());
         const unsub = subscribeLogs(cb);
@@ -340,39 +340,40 @@ function QuestModal(props: ModalProps) {
     }, []);
 
     return (
-        <ModalRoot {...props} size="large">
-            <ModalHeader>
+        <Modal
+            {...props}
+            size="lg"
+            title={
                 <Flex style={{ alignItems: "center", gap: 8 }}>
                     <img src={EMOJI_URL} width={24} height={24} style={{ borderRadius: "50%" }} />
-                    <Forms.FormTitle tag="h2" style={{ margin: 0 }}>Выполнить задачи - Логи</Forms.FormTitle>
+                    Выполнить задачи - Логи
                 </Flex>
-            </ModalHeader>
-            <ModalContent>
-                <Flex style={{ gap: 8, marginBottom: 12 }}>
-                    <Button color={Button.Colors.GREEN} onClick={() => runQuests()} disabled={isRunning}>Запустить</Button>
-                    <Button color={Button.Colors.RED} onClick={() => stopQuests()} disabled={!isRunning}>Остановить</Button>
-                    <Button color={Button.Colors.PRIMARY} onClick={() => clearLogs()}>Очистить</Button>
-                </Flex>
-                <div style={{
-                    background: "var(--background-secondary-alt, #2b2d31)",
-                    color: "var(--text-normal, #f2f3f5)",
-                    borderRadius: 8,
-                    padding: 8,
-                    height: 300,
-                    overflowY: "auto",
-                    fontFamily: "monospace",
-                    fontSize: 12,
-                    whiteSpace: "pre-wrap",
-                    border: "1px solid var(--background-tertiary)",
-                    lineHeight: "1.4"
-                }}>
-                    {logState.length === 0 ? <span style={{ opacity: 0.6, color: "var(--text-muted)" }}>Логов пока нет. Нажми Запустить.</span> : logState.join("\n")}
-                </div>
-                <Forms.FormText style={{ marginTop: 8 }} className={Margins.top8}>
-                    Плагин локальный, логи видны только тебе. Для видео-квестов работает в браузере, для PLAY/STREAM нужен десктоп.
-                </Forms.FormText>
-            </ModalContent>
-        </ModalRoot>
+            }
+        >
+            <Flex style={{ gap: 8, marginBottom: 12 }}>
+                <Button color={Button.Colors.GREEN} onClick={() => runQuests()} disabled={isRunning}>Запустить</Button>
+                <Button color={Button.Colors.RED} onClick={() => stopQuests()} disabled={!isRunning}>Остановить</Button>
+                <Button color={Button.Colors.PRIMARY} onClick={() => clearLogs()}>Очистить</Button>
+            </Flex>
+            <div style={{
+                background: "var(--background-secondary-alt, #2b2d31)",
+                color: "var(--text-normal, #f2f3f5)",
+                borderRadius: 8,
+                padding: 8,
+                height: 300,
+                overflowY: "auto",
+                fontFamily: "monospace",
+                fontSize: 12,
+                whiteSpace: "pre-wrap",
+                border: "1px solid var(--background-tertiary)",
+                lineHeight: "1.4"
+            }}>
+                {logState.length === 0 ? <span style={{ opacity: 0.6, color: "var(--text-muted)" }}>Логов пока нет. Нажми Запустить.</span> : logState.join("\n")}
+            </div>
+            <Forms.FormText style={{ marginTop: 8 }} className={Margins.top8}>
+                Плагин локальный, логи видны только тебе. Для видео-квестов работает в браузере, для PLAY/STREAM нужен десктоп.
+            </Forms.FormText>
+        </Modal>
     );
 }
 

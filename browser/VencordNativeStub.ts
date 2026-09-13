@@ -56,6 +56,7 @@ window.VencordNative = {
     native: {
         getVersions: () => ({}),
         supportsWindowsMaterial: () => false,
+        toggleDevTools: NOOP_ASYNC,
         openExternal: async (url) => void open(url, "_blank"),
         getRendererCss: async () => {
             if (IS_USERSCRIPT)

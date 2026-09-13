@@ -31,7 +31,6 @@ function getFetcher(): typeof fetch {
         // Electron's net.fetch respects system proxy settings,
         // while Node's global fetch (undici) does not and fails
         // with ConnectTimeoutError behind proxies / VPN / DPI tools.
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { net } = require("electron");
         if (net?.fetch) return net.fetch.bind(net);
     } catch { }

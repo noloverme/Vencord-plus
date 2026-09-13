@@ -46,8 +46,8 @@ export function txPlaceholder(pluginName: string, optionId: string, fallback: st
 }
 
 /** Translated select-option labels. Unknown values keep their English label. */
-export function txSelectOptions<T extends { label: string; value: unknown; }>(pluginName: string, optionId: string, options: T[] | undefined): T[] | undefined {
-    if (!isRU() || !options) return options;
+export function txSelectOptions<T extends { label: string; value: unknown; }>(pluginName: string, optionId: string, options: readonly T[]): readonly T[] {
+    if (!isRU()) return options;
     const map = txOption(pluginName, optionId)?.o;
     if (!map) return options;
     return options.map(o => {
