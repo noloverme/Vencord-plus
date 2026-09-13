@@ -5,6 +5,8 @@
  */
 
 import { classNameFactory } from "@utils/css";
+import { t } from "@utils/locale";
+import { txDesc, txName } from "@utils/localePlugins";
 import { classes } from "@utils/misc";
 import { wordsFromCamel, wordsToTitle } from "@utils/text";
 import { DefinedSettings, PluginSettingDefCommon } from "@utils/types";
@@ -31,7 +33,7 @@ export type ComponentSettingProps<T extends Omit<PluginSettingDefCommon, "descri
 export function resolveError(isValidResult: boolean | string) {
     if (typeof isValidResult === "string") return isValidResult;
 
-    return isValidResult ? null : "Invalid input provided";
+    return isValidResult ? null : t("Invalid input provided", "Некорректный ввод");
 }
 
 interface SettingsSectionProps extends PropsWithChildren {
@@ -41,15 +43,19 @@ interface SettingsSectionProps extends PropsWithChildren {
     error?: string | null;
     inlineSetting?: boolean;
     tag?: "label" | "div";
+    /** plugin name for RU dictionary lookup (see utils/localeRu) */
+    pluginName?: string;
 }
 
-export function SettingsSection({ tag: Tag = "div", name, id, description, error, inlineSetting, children }: SettingsSectionProps) {
+export function SettingsSection({ tag: Tag = "div", name, id, description, error, inlineSetting, children, pluginName }: SettingsSectionProps) {
+    const tName = name != null && pluginName ? txName(pluginName, id, name) ?? name : name;
+    const tDesc = pluginName ? txDesc(pluginName, id, description) ?? description : description;
     return (
         <Tag className={cl("section")}>
             <div className={classes(cl("content"), inlineSetting && cl("inline"))}>
                 <div className={cl("label")}>
-                    <Text className={cl("title")} variant="text-md/medium">{name ?? wordsToTitle(wordsFromCamel(id))}</Text>
-                    {description && <Text className={cl("description")} variant="text-sm/normal">{description}</Text>}
+                    <Text className={cl("title")} variant="text-md/medium">{tName ?? wordsToTitle(wordsFromCamel(id))}</Text>
+                    {tDesc && <Text className={cl("description")} variant="text-sm/normal">{tDesc}</Text>}
                 </div>
                 {children}
             </div>

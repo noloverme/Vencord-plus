@@ -15,6 +15,7 @@ import { PlaceholderIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
 import { Switch } from "@components/Switch";
 import { classNameFactory } from "@utils/css";
+import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
@@ -30,10 +31,10 @@ export function UIElementsButton() {
             <Card className={cl("button")} defaultPadding>
                 <div className={cl("button-description")}>
                     <Paragraph size="md" weight="semibold">
-                        Manage plugin UI elements
+                        {t("Manage plugin UI elements", "Элементы интерфейса плагинов")}
                     </Paragraph>
                     <Paragraph size="xs">
-                        Allows you to hide buttons you don't like
+                        {t("Allows you to hide buttons you don't like", "Позволяет скрыть ненужные кнопки")}
                     </Paragraph>
                 </div>
                 <svg
@@ -81,7 +82,7 @@ function Section(props: {
             <div className={cl("switches")}>
                 {switches.length === 0 && (
                     <Paragraph weight="medium" className={cl("switches-row")} style={{ color: "var(--text-muted)" }}>
-                        Buttons of enabled plugins will appear here.
+                        {t("Buttons of enabled plugins will appear here.", "Здесь появятся кнопки включённых плагинов.")}
                     </Paragraph>
                 )}
                 {switches}
@@ -94,17 +95,17 @@ function UIElementsModal(props: RenderModalProps) {
     const { uiElements } = useSettings(["uiElements.*"]);
 
     return (
-        <Modal {...props} size="md" title="Manage plugin UI elements">
+        <Modal {...props} size="md" title={t("Manage plugin UI elements", "Элементы интерфейса плагинов")}>
             <div className={cl("modal-content")}>
                 <Section
-                    title="Chatbar Buttons"
-                    description="These are the buttons on the right side of the chat input bar"
+                    title={t("Chatbar Buttons", "Кнопки панели ввода")}
+                    description={t("These are the buttons on the right side of the chat input bar", "Кнопки справа от поля ввода сообщения")}
                     buttonMap={ChatBarButtonMap}
                     settings={uiElements.chatBarButtons}
                 />
                 <Section
-                    title="Message Popover Buttons"
-                    description="These are the floating buttons on the right when you hover over a message"
+                    title={t("Message Popover Buttons", "Кнопки поповера сообщений")}
+                    description={t("These are the floating buttons on the right when you hover over a message", "Всплывающие кнопки справа при наведении на сообщение")}
                     buttonMap={MessagePopoverButtonMap}
                     settings={uiElements.messagePopoverButtons}
                 />

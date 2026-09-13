@@ -9,6 +9,8 @@ import { hasAnyVisibleSettings, isPluginEnabled, pluginRequiresRestart, startDep
 import { Settings } from "@api/Settings";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
+import { t } from "@utils/locale";
+import { tpDescription } from "@utils/localePlugins";
 import { Plugin } from "@utils/types";
 import { React, showToast, Toasts } from "@webpack/common";
 
@@ -36,7 +38,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
 
             if (failures.length) {
                 logger.error(`Failed to start dependencies for ${plugin.name}: ${failures.join(", ")}`);
-                showNotice("Failed to start dependencies: " + failures.join(", "), "Close", () => null);
+                showNotice(t("Failed to start dependencies: ", "Не удалось запустить зависимости: ") + failures.join(", "), t("Close", "Закрыть"), () => null);
                 return;
             }
 
@@ -66,7 +68,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         if (!result) {
             settings.enabled = false;
 
-            const msg = `Error while ${wasEnabled ? "stopping" : "starting"} plugin ${plugin.name}`;
+            const msg = t(`Error while ${wasEnabled ? "stopping" : "starting"} plugin ${plugin.name}`, `Ошибка при ${wasEnabled ? "остановке" : "запуске"} плагина ${plugin.name}`);
             showToast(msg, Toasts.Type.FAILURE, {
                 position: Toasts.Position.BOTTOM,
             });
@@ -80,7 +82,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
     return (
         <AddonCard
             name={plugin.name}
-            description={plugin.description}
+            description={tpDescription(plugin.name, plugin.description)}
             isNew={isNew}
             enabled={isEnabled()}
             setEnabled={toggleEnabled}

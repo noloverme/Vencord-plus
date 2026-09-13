@@ -26,6 +26,7 @@ import { HeadingSecondary } from "@components/Heading";
 import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { t, useT } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { useAwaiter } from "@utils/react";
@@ -45,18 +46,18 @@ function VesktopSection() {
         <Flex className={Margins.bottom20} flexDirection="column" gap="1em">
             <Card variant="info">
                 <HeadingSecondary>Vesktop & Vencord</HeadingSecondary>
-                <Paragraph>Vesktop and Vencord are two separate things. This updater is for Vencord.</Paragraph>
+                <Paragraph>{t("Vesktop and Vencord are two separate things. This updater is for Vencord.", "Vesktop и Vencord — разные вещи. Этот апдейтер — для Vencord.")}</Paragraph>
                 <Paragraph className={Margins.top8}>
-                    You receive separate popups for Vesktop updates. You can also manually update by installing the <Link href="https://vesktop.dev/install">latest version</Link>.
+                    {t("You receive separate popups for Vesktop updates. You can also manually update by installing the ", "Обновления Vesktop приходят отдельно. Можно обновиться вручную, установив ")}<Link href="https://vesktop.dev/install">{t("latest version", "последнюю версию")}</Link>.
                 </Paragraph>
             </Card>
 
             {isVesktopOutdated && (
                 <Card variant="warning">
-                    <HeadingSecondary>Vesktop Outdated</HeadingSecondary>
+                    <HeadingSecondary>{t("Vesktop Outdated", "Vesktop устарел")}</HeadingSecondary>
                     <Flex flexDirection="column" gap="0.5em">
-                        <Paragraph>Your version of Vesktop is outdated!</Paragraph>
-                        <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>Open Vesktop Updater</Button>
+                        <Paragraph>{t("Your version of Vesktop is outdated!", "Ваша версия Vesktop устарела!")}</Paragraph>
+                        <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>{t("Open Vesktop Updater", "Открыть апдейтер Vesktop")}</Button>
                     </Flex>
                 </Card>
             )}
@@ -65,10 +66,11 @@ function VesktopSection() {
 }
 
 function Updater() {
-    const settings = useSettings(["autoUpdate", "autoUpdateNotification"]);
+    useT();
+    const settings = useSettings(["autoUpdate", "autoUpdateNotification", "locale"]);
 
     const [repo, err, repoPending] = useAwaiter(getRepo, {
-        fallbackValue: "Loading...",
+        fallbackValue: t("Loading...", "Загрузка..."),
         onError: e => UpdateLogger.error("Failed to retrieve repo", err)
     });
 
@@ -83,15 +85,15 @@ function Updater() {
 
             <div className="vc-settings-switches">
                 <FormSwitch
-                    title="Automatically update"
-                    description="Automatically update Vencord without confirmation prompt"
+                    title={t("Automatically update", "Обновлять автоматически")}
+                    description={t("Automatically update Vencord without confirmation prompt", "Обновлять Vencord без запроса подтверждения")}
                     value={settings.autoUpdate}
                     onChange={(v: boolean) => settings.autoUpdate = v}
                     hideBorder
                 />
                 <FormSwitch
-                    title="Get notified when an automatic update completes"
-                    description="Show a notification when Vencord automatically updates"
+                    title={t("Get notified when an automatic update completes", "Уведомлять о завершении автообновления")}
+                    description={t("Show a notification when Vencord automatically updates", "Показывать уведомление, когда Vencord обновился автоматически")}
                     value={settings.autoUpdateNotification}
                     onChange={(v: boolean) => settings.autoUpdateNotification = v}
                     disabled={!settings.autoUpdate}
@@ -99,13 +101,13 @@ function Updater() {
                 />
             </div>
 
-            <Forms.FormTitle tag="h5" className={Margins.top20}>Repo</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top20}>{t("Repo", "Репозиторий")}</Forms.FormTitle>
 
             <Forms.FormText>
                 {repoPending
                     ? repo
                     : err
-                        ? "Failed to retrieve - check console"
+                        ? t("Failed to retrieve - check console", "Не удалось получить — смотрите консоль")
                         : (
                             <Link href={repo}>
                                 {repo.split("/").slice(-2).join("/")}
@@ -118,7 +120,7 @@ function Updater() {
 
             <Divider className={classes(Margins.top16, Margins.bottom16)} />
 
-            <Forms.FormTitle tag="h5">Updates</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">{t("Updates", "Обновления")}</Forms.FormTitle>
 
             {isNewer
                 ? <Newer {...commonProps} />

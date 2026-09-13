@@ -17,6 +17,8 @@
 */
 
 import { isSettingDisabled } from "@api/PluginManager";
+import { t } from "@utils/locale";
+import { txPlaceholder } from "@utils/localePlugins";
 import { OptionType, PluginSettingBigIntDef, PluginSettingNumberDef } from "@utils/types";
 import { React, TextInput, useState } from "@webpack/common";
 
@@ -50,11 +52,11 @@ export function NumberSetting({ setting, pluginSettings, definedSettings, id, on
     }
 
     return (
-        <SettingsSection name={setting.displayName} id={id} description={setting.description} error={error}>
+        <SettingsSection name={setting.displayName} id={id} description={setting.description} error={error} pluginName={definedSettings.pluginName}>
             <TextInput
                 type="number"
                 pattern="-?[0-9]+"
-                placeholder={setting.placeholder ?? "Enter a number"}
+                placeholder={txPlaceholder(definedSettings.pluginName, id, setting.placeholder) ?? t("Enter a number", "Введите число")}
                 value={state}
                 onChange={handleChange}
                 disabled={isSettingDisabled(definedSettings, setting)}

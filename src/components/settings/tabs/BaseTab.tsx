@@ -18,6 +18,7 @@
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { handleComponentFailed } from "@components/handleComponentFailed";
+import { t } from "@utils/locale";
 import { onlyOnce } from "@utils/onlyOnce";
 import { Modal,openModal } from "@webpack/common";
 import type { ComponentType, PropsWithChildren } from "react";
@@ -33,7 +34,7 @@ export const handleSettingsTabError = onlyOnce(handleComponentFailed);
 export function wrapTab(component: ComponentType<any>, tab: string) {
     const wrapped = ErrorBoundary.wrap(component, {
         displayName: `${tab}SettingsTab`,
-        message: `Failed to render the ${tab} tab. If this issue persists, try using the installer to reinstall!`,
+        message: t(`Failed to render the ${tab} tab. If this issue persists, try using the installer to reinstall!`, `Не удалось отрисовать вкладку ${tab}. Если не проходит, переустановите через установщик!`),
         onError: handleSettingsTabError,
     });
 

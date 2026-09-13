@@ -17,6 +17,8 @@
 */
 
 import { isSettingDisabled } from "@api/PluginManager";
+import { t } from "@utils/locale";
+import { txPlaceholder, txSelectOptions } from "@utils/localePlugins";
 import { PluginSettingSelectDef } from "@utils/types";
 import { React, Select, useState } from "@webpack/common";
 
@@ -40,10 +42,10 @@ export function SelectSetting({ setting, pluginSettings, definedSettings, onChan
     }
 
     return (
-        <SettingsSection name={setting.displayName} id={id} description={setting.description} error={error}>
+        <SettingsSection name={setting.displayName} id={id} description={setting.description} error={error} pluginName={definedSettings.pluginName}>
             <Select
-                placeholder={setting.placeholder ?? "Select an option"}
-                options={setting.options}
+                placeholder={txPlaceholder(definedSettings.pluginName, id, setting.placeholder) ?? t("Select an option", "Выберите вариант")}
+                options={txSelectOptions(definedSettings.pluginName, id, setting.options)}
                 maxVisibleItems={5}
                 closeOnSelect={true}
                 select={handleChange}

@@ -18,6 +18,7 @@
 
 import gitHash from "~git-hash";
 
+import { t } from "./locale";
 import { Logger } from "./Logger";
 import { relaunch } from "./native";
 import { IpcRes } from "./types";
@@ -59,7 +60,7 @@ export async function update() {
     if (res) {
         isOutdated = false;
         if (!await Unwrap(VencordNative.updater.rebuild()))
-            throw new Error("The Build failed. Please try manually building the new update");
+            throw new Error(t("The Build failed. Please try manually building the new update", "Сборка не удалась. Попробуйте собрать обновление вручную"));
     }
 
     return res;
@@ -75,7 +76,7 @@ export async function maybePromptToUpdate(confirmMessage: string, checkForDev = 
         const isOutdated = await checkForUpdates();
         if (isOutdated) {
             const wantsUpdate = confirm(confirmMessage);
-            if (wantsUpdate && isNewer) return alert("Your local copy has more recent commits. Please stash or reset them.");
+            if (wantsUpdate && isNewer) return alert(t("Your local copy has more recent commits. Please stash or reset them.", "Ваша локальная копия новее. Сделайте stash или reset."));
             if (wantsUpdate) {
                 await update();
                 relaunch();
@@ -83,6 +84,6 @@ export async function maybePromptToUpdate(confirmMessage: string, checkForDev = 
         }
     } catch (err) {
         UpdateLogger.error(err);
-        alert("That also failed :( Try updating or re-installing with the installer!");
+        alert(t("That also failed :( Try updating or re-installing with the installer!", "Тоже не вышло :( Попробуйте обновиться или переустановиться через установщик!"));
     }
 }

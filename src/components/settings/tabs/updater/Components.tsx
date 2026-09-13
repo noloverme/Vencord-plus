@@ -8,6 +8,7 @@ import { Card } from "@components/Card";
 import { ErrorCard } from "@components/ErrorCard";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
+import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { relaunch } from "@utils/native";
@@ -60,7 +61,7 @@ export function Newer(props: CommonProps) {
     return (
         <>
             <Forms.FormText className={Margins.bottom8}>
-                Your local copy has more recent commits. Please stash or reset them.
+                {t("Your local copy has more recent commits. Please stash or reset them.", "Ваша локальная копия новее. Сделайте stash или reset.")}
             </Forms.FormText>
             <Changes {...props} updates={changes} />
         </>
@@ -78,14 +79,14 @@ export function Updatable(props: CommonProps) {
         <>
             {!updates && updateError ? (
                 <>
-                    <Forms.FormText>Failed to check updates. Check the console for more info</Forms.FormText>
+                    <Forms.FormText>{t("Failed to check updates. Check the console for more info", "Не удалось проверить обновления. Смотрите консоль")}</Forms.FormText>
                     <ErrorCard style={{ padding: "1em" }}>
-                        <p>{updateError.stderr || updateError.stdout || "An unknown error occurred"}</p>
+                        <p>{updateError.stderr || updateError.stdout || t("An unknown error occurred", "Неизвестная ошибка")}</p>
                     </ErrorCard>
                 </>
             ) : (
                 <Forms.FormText className={Margins.bottom8}>
-                    {isOutdated ? (updates.length === 1 ? "There is 1 Update" : `There are ${updates.length} Updates`) : "Up to Date!"}
+                    {isOutdated ? (updates.length === 1 ? t("There is 1 Update", "Есть 1 обновление") : t(`There are ${updates.length} Updates`, `Обновлений: ${updates.length}`)) : t("Up to Date!", "Всё актуально!")}
                 </Forms.FormText>
             )}
 
@@ -103,10 +104,10 @@ export function Updatable(props: CommonProps) {
                                     openModal(props => (
                                         <ConfirmModal
                                             {...props}
-                                            title="Update Success!"
-                                            subtitle="Successfully updated. Restart now to apply the changes?"
-                                            confirmText="Restart"
-                                            cancelText="Not now!"
+                                            title={t("Update Success!", "Обновлено!")}
+                                            subtitle={t("Successfully updated. Restart now to apply the changes?", "Успешно обновлено. Перезапустить для применения?")}
+                                            confirmText={t("Restart", "Перезапустить")}
+                                            cancelText={t("Not now!", "Не сейчас!")}
                                             variant="primary"
                                             onConfirm={() => {
                                                 relaunch();
@@ -119,7 +120,7 @@ export function Updatable(props: CommonProps) {
                             }
                         })}
                     >
-                        Update Now
+                        {t("Update Now", "Обновить")}
                     </Button>
                 )}
                 <Button
@@ -133,7 +134,7 @@ export function Updatable(props: CommonProps) {
                             setUpdates([]);
 
                             Toasts.show({
-                                message: "No updates found!",
+                                message: t("No updates found!", "Обновлений нет!"),
                                 id: Toasts.genId(),
                                 type: Toasts.Type.MESSAGE,
                                 options: {
@@ -143,7 +144,7 @@ export function Updatable(props: CommonProps) {
                         }
                     })}
                 >
-                    Check for Updates
+                    {t("Check for Updates", "Проверить обновления")}
                 </Button>
             </Flex>
         </>

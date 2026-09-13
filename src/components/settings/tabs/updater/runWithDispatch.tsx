@@ -5,21 +5,22 @@
  */
 
 import { ErrorCard } from "@components/ErrorCard";
+import { t } from "@utils/locale";
 import { UpdateLogger } from "@utils/updater";
 import { ConfirmModal,openModal, Parser } from "@webpack/common";
 
 function getErrorMessage(e: any) {
     if (!e?.code || !e.cmd)
-        return "An unknown error occurred.\nPlease try again or see the console for more info.";
+        return t("An unknown error occurred.\nPlease try again or see the console for more info.", "Неизвестная ошибка.\nПопробуйте ещё раз или смотрите консоль.");
 
     const { code, path, cmd, stderr } = e;
 
     if (code === "ENOENT")
-        return `Command \`${path}\` not found.\nPlease install it and try again.`;
+        return t(`Command \`${path}\` not found.\nPlease install it and try again.`, `Команда \`${path}\` не найдена.\nУстановите её и попробуйте снова.`);
 
-    const extra = stderr || `Code \`${code}\`. See the console for more info.`;
+    const extra = stderr || t(`Code \`${code}\`. See the console for more info.`, `Код \`${code}\`. Подробности в консоли.`);
 
-    return `An error occurred while running \`${cmd}\`:\n${extra}`;
+    return t(`An error occurred while running \`${cmd}\`:\n${extra}`, `Ошибка при выполнении \`${cmd}\`:\n${extra}`);
 }
 
 export function runWithDispatch(dispatch: React.Dispatch<React.SetStateAction<boolean>>, action: () => any) {
@@ -36,7 +37,7 @@ export function runWithDispatch(dispatch: React.Dispatch<React.SetStateAction<bo
             openModal(props => (
                 <ConfirmModal
                     {...props}
-                    title="Oops!"
+                    title={t("Oops!", "Упс!")}
                     confirmText="OK"
                     variant="primary"
                 >

@@ -7,72 +7,73 @@
 import { useSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { IS_MAC } from "@utils/constants";
+import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
 import { Forms, Select } from "@webpack/common";
 
 export function MacOSVibrancySettings() {
-    const settings = useSettings(["macosVibrancyStyle"]);
+    const settings = useSettings(["macosVibrancyStyle", "locale"]);
 
     if (!IS_MAC || IS_WEB) return null;
 
     return (
         <ErrorBoundary noop>
-            <Forms.FormTitle tag="h5">MacOS Window vibrancy style (requires restart)</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">{t("MacOS Window vibrancy style (requires restart)", "Стиль вибрации окна MacOS (нужен перезапуск)")}</Forms.FormTitle>
             <Select
                 className={Margins.bottom20}
-                placeholder="Window vibrancy style"
+                placeholder={t("Window vibrancy style", "Стиль вибрации окна")}
                 options={[
                     // Sorted from most opaque to most transparent
                     {
-                        label: "No vibrancy", value: undefined
+                        label: t("No vibrancy", "Без вибрации"), value: undefined
                     },
                     {
-                        label: "Under Page (window tinting)",
+                        label: t("Under Page (window tinting)", "Под страницей (тонирование окна)"),
                         value: "under-page"
                     },
                     {
-                        label: "Content",
+                        label: t("Content", "Контент"),
                         value: "content"
                     },
                     {
-                        label: "Window",
+                        label: t("Window", "Окно"),
                         value: "window"
                     },
                     {
-                        label: "Selection",
+                        label: t("Selection", "Выделение"),
                         value: "selection"
                     },
                     {
-                        label: "Titlebar",
+                        label: t("Titlebar", "Заголовок"),
                         value: "titlebar"
                     },
                     {
-                        label: "Header",
+                        label: t("Header", "Шапка"),
                         value: "header"
                     },
                     {
-                        label: "Sidebar",
+                        label: t("Sidebar", "Боковая панель"),
                         value: "sidebar"
                     },
                     {
-                        label: "Tooltip",
+                        label: t("Tooltip", "Подсказка"),
                         value: "tooltip"
                     },
                     {
-                        label: "Menu",
+                        label: t("Menu", "Меню"),
                         value: "menu"
                     },
                     {
-                        label: "Popover",
+                        label: t("Popover", "Поповер"),
                         value: "popover"
                     },
                     {
-                        label: "Fullscreen UI (transparent but slightly muted)",
+                        label: t("Fullscreen UI (transparent but slightly muted)", "Полноэкранный UI (прозрачный, слегка приглушён)"),
                         value: "fullscreen-ui"
                     },
                     {
-                        label: "HUD (Most transparent)",
+                        label: t("HUD (Most transparent)", "HUD (максимально прозрачный)"),
                         value: "hud"
                     },
                 ]}

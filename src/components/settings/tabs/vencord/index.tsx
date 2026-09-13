@@ -29,10 +29,11 @@ import { openPluginModal } from "@components/settings/tabs/plugins/PluginModal";
 import SettingsPlugin from "@plugins/_core/settings";
 import { gitRemote } from "@shared/vencordUserAgent";
 import { IS_WINDOWS } from "@utils/constants";
+import { getLocale, setLocale, t, useT } from "@utils/locale";
 import { Margins } from "@utils/margins";
-import { isPluginDev } from "@utils/misc";
+import { identity, isPluginDev } from "@utils/misc";
 import { relaunch } from "@utils/native";
-import { ConfirmModal, Forms, openModal, React, useMemo, UserStore } from "@webpack/common";
+import { ConfirmModal, Forms, openModal, React, Select, useMemo, UserStore } from "@webpack/common";
 
 import { DonateButtonComponent, isDonor } from "./DonateButton";
 import { MacOSVibrancySettings } from "./MacVibrancySettings";
@@ -51,44 +52,45 @@ type KeysOfType<Object, Type> = {
 }[keyof Object];
 
 function Switches() {
-    const settings = useSettings(["useQuickCss", "enableReactDevtools", "frameless", "winNativeTitleBar", "transparent", "winCtrlQ", "disableMinSize"]);
+    // "locale" subscription so all titles re-render on language switch
+    const settings = useSettings(["useQuickCss", "enableReactDevtools", "frameless", "winNativeTitleBar", "transparent", "winCtrlQ", "disableMinSize", "locale"]);
 
     const Switches = [
         {
             key: "useQuickCss",
-            title: "Enable Custom CSS",
-            description: "Apply your configured QuickCSS"
+            title: t("Enable Custom CSS", "Включить Custom CSS"),
+            description: t("Apply your configured QuickCSS", "Применять ваш QuickCSS")
         },
         !IS_WEB && (!IS_DISCORD_DESKTOP || !IS_WINDOWS ? {
             key: "frameless",
-            title: "Disable the window frame",
+            title: t("Disable the window frame", "Убрать рамку окна"),
             restartRequired: true
         } : {
             key: "winNativeTitleBar",
-            title: "Use Windows' native title bar instead of Discord's custom one",
+            title: t("Use Windows' native title bar instead of Discord's custom one", "Использовать родной заголовок Windows вместо кастомного Discord"),
             restartRequired: true
         }),
         !IS_WEB && {
             key: "transparent",
-            title: "Enable window transparency",
-            description: "A theme that supports transparency is required or this will do nothing. Stops the window from being resizable as a side effect",
+            title: t("Enable window transparency", "Включить прозрачность окна"),
+            description: t("A theme that supports transparency is required or this will do nothing. Stops the window from being resizable as a side effect", "Нужна тема с поддержкой прозрачности, иначе не сработает. Побочный эффект: окно перестанет менять размер"),
             restartRequired: true
         },
         IS_DISCORD_DESKTOP && {
             key: "disableMinSize",
-            title: "Disable minimum window size",
-            description: "Allows you to resize the window to any size, even smaller than Discord's minimum size",
+            title: t("Disable minimum window size", "Убрать минимальный размер окна"),
+            description: t("Allows you to resize the window to any size, even smaller than Discord's minimum size", "Позволяет сжимать окно до любого размера, даже меньше минимума Discord"),
             restartRequired: true
         },
         !IS_WEB && IS_WINDOWS && {
             key: "winCtrlQ",
-            title: "Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)",
+            title: t("Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)", "Закрывать Discord по Ctrl+Q (альтернатива Alt+F4)"),
             restartRequired: true
         },
         !IS_WEB && {
             key: "enableReactDevtools",
-            title: "Enable React Developer Tools",
-            description: "Mainly useful for plugin developers. Ignore this if you don't know what it is",
+            title: t("Enable React Developer Tools", "Включить React Developer Tools"),
+            description: t("Mainly useful for plugin developers. Ignore this if you don't know what it is", "В основном для разработчиков плагинов. Если не знаете что это — игнорируйте"),
             restartRequired: true
         },
     ] satisfies Array<false | {
@@ -119,10 +121,10 @@ function Switches() {
                         openModal(props => (
                             <ConfirmModal
                                 {...props}
-                                title="Restart Required"
-                                subtitle="A restart is required to apply this change"
-                                confirmText="Restart now"
-                                cancelText="Later!"
+                                title={t("Restart Required", "Нужен перезапуск")}
+                                subtitle={t("A restart is required to apply this change", "Чтобы применить изменение, нужен перезапуск")}
+                                confirmText={t("Restart now", "Перезапустить")}
+                                cancelText={t("Later!", "Позже!")}
                                 variant="primary"
                                 onConfirm={relaunch}
                             />
@@ -134,7 +136,28 @@ function Switches() {
     });
 }
 
+function LanguageSection() {
+    useT();
+    return (
+        <section className={Margins.top16}>
+            <Forms.FormTitle tag="h5">{t("Language / Язык", "Язык / Language")}</Forms.FormTitle>
+            <Select
+                placeholder={t("Interface language", "Язык интерфейса")}
+                options={[
+                    { label: "English", value: "en" },
+                    { label: "Русский", value: "ru" },
+                ]}
+                closeOnSelect={true}
+                select={v => setLocale(v as "en" | "ru")}
+                isSelected={v => v === getLocale()}
+                serialize={identity}
+            />
+        </section>
+    );
+}
+
 function VencordSettings() {
+    useT();
     const donateImage = useMemo(() =>
         Math.random() > 0.5 ? DEFAULT_DONATE_IMAGE : SHIGGY_DONATE_IMAGE,
         []
@@ -147,9 +170,9 @@ function VencordSettings() {
             {isDonor(user?.id)
                 ? (
                     <SpecialCard
-                        title="Donations"
-                        subtitle="Thank you for donating!"
-                        description="You can manage your perks at any time by messaging @vending.machine."
+                        title={t("Donations", "Донаты")}
+                        subtitle={t("Thank you for donating!", "Спасибо за донат!")}
+                        description={t("You can manage your perks at any time by messaging @vending.machine.", "Управлять привилегиями можно в любое время, написав @vending.machine.")}
                         cardImage={VENNIE_DONATOR_IMAGE}
                         backgroundImage={DONOR_BACKGROUND_IMAGE}
                         backgroundColor="#ED87A9"
@@ -159,8 +182,8 @@ function VencordSettings() {
                 )
                 : (
                     <SpecialCard
-                        title="Support the Project"
-                        description="Please consider supporting the development of Vencord by donating!"
+                        title={t("Support the Project", "Поддержите проект")}
+                        description={t("Please consider supporting the development of Vencord by donating!", "Пожалуйста, поддержите разработку Vencord донатом!")}
                         cardImage={donateImage}
                         backgroundImage={DONOR_BACKGROUND_IMAGE}
                         backgroundColor="#c3a3ce"
@@ -172,48 +195,48 @@ function VencordSettings() {
 
             {isPluginDev(user?.id) && (
                 <SpecialCard
-                    title="Contributions"
-                    subtitle="Thank you for contributing!"
-                    description="Since you've contributed to Vencord you now have a cool new badge!"
+                    title={t("Contributions", "Вклад в проект")}
+                    subtitle={t("Thank you for contributing!", "Спасибо за вклад!")}
+                    description={t("Since you've contributed to Vencord you now have a cool new badge!", "За вклад в Vencord у вас теперь крутой новый бейдж!")}
                     cardImage={COZY_CONTRIB_IMAGE}
                     backgroundImage={CONTRIB_BACKGROUND_IMAGE}
                     backgroundColor="#EDCC87"
-                    buttonTitle="See what you've contributed to"
+                    buttonTitle={t("See what you've contributed to", "Посмотреть мой вклад")}
                     buttonOnClick={() => openContributorModal(user)}
                 />
             )}
 
             <section>
-                <Forms.FormTitle tag="h5">Quick Actions</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">{t("Quick Actions", "Быстрые действия")}</Forms.FormTitle>
 
                 <QuickActionCard>
                     <QuickAction
                         Icon={LogIcon}
-                        text="Notification Log"
+                        text={t("Notification Log", "Журнал уведомлений")}
                         action={openNotificationLogModal}
                     />
                     <QuickAction
                         Icon={PaintbrushIcon}
-                        text="Edit QuickCSS"
+                        text={t("Edit QuickCSS", "Редактировать QuickCSS")}
                         action={() => VencordNative.quickCss.openEditor()}
                     />
                     {!IS_WEB && (
                         <>
                             <QuickAction
                                 Icon={RestartIcon}
-                                text="Relaunch Discord"
+                                text={t("Relaunch Discord", "Перезапустить Discord")}
                                 action={relaunch}
                             />
                             <QuickAction
                                 Icon={FolderIcon}
-                                text="Open Settings Folder"
+                                text={t("Open Settings Folder", "Открыть папку настроек")}
                                 action={() => VencordNative.settings.openFolder()}
                             />
                         </>
                     )}
                     <QuickAction
                         Icon={GithubIcon}
-                        text="View Source Code"
+                        text={t("View Source Code", "Исходный код")}
                         action={() => VencordNative.native.openExternal("https://github.com/" + gitRemote)}
                     />
                 </QuickActionCard>
@@ -221,12 +244,16 @@ function VencordSettings() {
 
             <Divider />
 
+            <LanguageSection />
+
+            <Divider />
+
             <section className={Margins.top16}>
-                <Forms.FormTitle tag="h5">Settings</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">{t("Settings", "Настройки")}</Forms.FormTitle>
                 <Forms.FormText className={Margins.bottom20} style={{ color: "var(--text-muted)" }}>
-                    Hint: You can change the position of this settings section in the{" "}
+                    {t("Hint: You can change the position of this settings section in the ", "Подсказка: положение этого раздела можно изменить в ")}{" "}
                     <a onClick={() => openPluginModal(SettingsPlugin)}>
-                        settings of the Settings plugin
+                        {t("settings of the Settings plugin", "настройках плагина Settings")}
                     </a>!
                 </Forms.FormText>
 

@@ -33,6 +33,8 @@ import { isTruthy } from "@utils/guards";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
+import { t } from "@utils/locale";
+import { tpDescription } from "@utils/localePlugins";
 import { PluginTarget } from "@utils/pluginTargets";
 import { useAwaiter, useCleanupEffect } from "@utils/react";
 import { PluginTag, PluginTags } from "@utils/types";
@@ -53,20 +55,20 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
             {required
                 ? (
                     <>
-                        <HeadingTertiary>Restart required!</HeadingTertiary>
+                        <HeadingTertiary>{t("Restart required!", "Нужен перезапуск!")}</HeadingTertiary>
                         <Paragraph className={cl("dep-text")}>
-                            Restart now to apply new plugins and their settings
+                            {t("Restart now to apply new plugins and their settings", "Перезапустите, чтобы применить плагины и их настройки")}
                         </Paragraph>
                         <Button onClick={() => location.reload()} className={cl("restart-button")}>
-                            Restart
+                            {t("Restart", "Перезапустить")}
                         </Button>
                     </>
                 )
                 : (
                     <>
-                        <HeadingTertiary>Plugin Management</HeadingTertiary>
-                        <Paragraph>Press the cog wheel or info icon to get more info on a plugin</Paragraph>
-                        <Paragraph>Plugins with a cog wheel have settings you can modify!</Paragraph>
+                        <HeadingTertiary>{t("Plugin Management", "Управление плагинами")}</HeadingTertiary>
+                        <Paragraph>{t("Press the cog wheel or info icon to get more info on a plugin", "Нажмите на шестерёнку или иконку информации для подробностей о плагине")}</Paragraph>
+                        <Paragraph>{t("Plugins with a cog wheel have settings you can modify!", "У плагинов с шестерёнкой есть настраиваемые параметры!")}</Paragraph>
                     </>
                 )}
         </Card>
@@ -90,28 +92,28 @@ function ExcludedPluginsList({ search }: { search: string; }) {
         : [];
 
     const ExcludedReasons: Record<PluginTarget, string> = {
-        desktop: "Discord Desktop app or Vesktop",
-        discordDesktop: "Discord Desktop app",
-        vesktop: "Vesktop app",
-        web: "Vesktop app and the Web version of Discord",
-        dev: "Developer version of Vencord",
-        browser: "Web Browser version of Vencord"
+        desktop: t("Discord Desktop app or Vesktop", "десктопный Discord или Vesktop"),
+        discordDesktop: t("Discord Desktop app", "десктопный Discord"),
+        vesktop: t("Vesktop app", "приложение Vesktop"),
+        web: t("Vesktop app and the Web version of Discord", "приложение Vesktop и веб-версия Discord"),
+        dev: t("Developer version of Vencord", "версия Vencord для разработчиков"),
+        browser: t("Web Browser version of Vencord", "браузерная версия Vencord")
     };
 
     return (
         <Paragraph className={Margins.top16}>
             {matchingExcludedPlugins.length
                 ? <>
-                    <Paragraph>Are you looking for:</Paragraph>
+                    <Paragraph>{t("Are you looking for:", "Может, вы ищете:")}</Paragraph>
                     <ul>
                         {matchingExcludedPlugins.map(([name, reason]) => (
                             <li key={name}>
-                                <b>{name}</b>: Only available on the {ExcludedReasons[reason]}
+                                <b>{name}</b>: {t("Only available on the ", "Доступно только в: ")}{ExcludedReasons[reason]}
                             </li>
                         ))}
                     </ul>
                 </>
-                : "No plugins meet the search criteria."
+                : t("No plugins meet the search criteria.", "Нет плагинов по заданным критериям.")
             }
         </Paragraph>
     );
@@ -127,14 +129,14 @@ function PluginSettings() {
             openModal(props => (
                 <ConfirmModal
                     {...props}
-                    title="Restart required"
-                    confirmText="Restart now"
-                    cancelText="Later!"
+                    title={t("Restart required", "Нужен перезапуск")}
+                    confirmText={t("Restart now", "Перезапустить")}
+                    cancelText={t("Later!", "Позже!")}
                     variant="primary"
                     onConfirm={() => location.reload()}
                 >
                     <>
-                        <p>The following plugins require a restart:</p>
+                        <p>{t("The following plugins require a restart:", "Эти плагины требуют перезапуска:")}</p>
                         <div>{changes.map((s, i) => (
                             <React.Fragment key={s}>
                                 {i > 0 && ", "}
@@ -205,6 +207,7 @@ function PluginSettings() {
             plugin.name.toLowerCase().includes(search) ||
             plugin.name.match(/[A-Z]/g)?.join("").toLowerCase().includes(search) || // acronyms like BF for BetterFolders
             plugin.description.toLowerCase().includes(search) ||
+            tpDescription(plugin.name, plugin.description).toLowerCase().includes(search) ||
             plugin.searchTerms?.some(t => t.toLowerCase().includes(search))
         );
     };
@@ -240,7 +243,7 @@ function PluginSettings() {
 
         if (isRequired) {
             const tooltipText = p.required || !depMap[p.name]
-                ? "This plugin is required for Vencord to function."
+                ? t("This plugin is required for Vencord to function.", "Этот плагин нужен для работы Vencord.")
                 : makeDependencyList(depMap[p.name]?.filter(d => settings.plugins[d].enabled));
 
             requiredPlugins.push(
@@ -277,13 +280,13 @@ function PluginSettings() {
             <UIElementsButton />
 
             <HeadingTertiary className={classes(Margins.top20, Margins.bottom8)}>
-                Filters
+                {t("Filters", "Фильтры")}
             </HeadingTertiary>
 
             <ErrorBoundary noop>
                 <TextInput
                     inputClassName={cl("filter-control")}
-                    placeholder="Search for a plugin..."
+                    placeholder={t("Search for a plugin...", "Найти плагин...")}
                     value={searchValue.value}
                     onChange={onSearch}
                     autoFocus
@@ -294,39 +297,39 @@ function PluginSettings() {
                 <div className={classes(Margins.bottom20, Margins.top8, cl("filter-controls"))}>
                     <Select
                         options={[
-                            { label: "Show All", value: SearchStatus.ALL, default: true },
-                            { label: "Show Favorites", value: SearchStatus.FAVORITES },
-                            { label: "Show Enabled", value: SearchStatus.ENABLED },
-                            { label: "Show Disabled", value: SearchStatus.DISABLED },
-                            { label: "Show New", value: SearchStatus.NEW },
-                            hasUserPlugins && { label: "Show UserPlugins", value: SearchStatus.USER_PLUGINS },
-                            { label: "Show API Plugins", value: SearchStatus.API_PLUGINS },
+                            { label: t("Show All", "Показать все"), value: SearchStatus.ALL, default: true },
+                            { label: t("Show Favorites", "Избранное"), value: SearchStatus.FAVORITES },
+                            { label: t("Show Enabled", "Включённые"), value: SearchStatus.ENABLED },
+                            { label: t("Show Disabled", "Выключенные"), value: SearchStatus.DISABLED },
+                            { label: t("Show New", "Новые"), value: SearchStatus.NEW },
+                            hasUserPlugins && { label: t("Show UserPlugins", "Пользовательские"), value: SearchStatus.USER_PLUGINS },
+                            { label: t("Show API Plugins", "API-плагины"), value: SearchStatus.API_PLUGINS },
                         ].filter(isTruthy)}
                         serialize={String}
                         select={status => setSearchValue(prev => ({ ...prev, status }))}
                         isSelected={v => v === searchValue.status}
                         closeOnSelect={true}
-                        placeholder="Filter by Type"
+                        placeholder={t("Filter by Type", "Фильтр по типу")}
                     />
                     <SearchableSelect
                         options={PluginTags.map(tag => ({ label: tag, value: tag }))}
                         value={searchValue.tags}
                         onChange={tags => setSearchValue(prev => ({ ...prev, tags }))}
                         closeOnSelect={false}
-                        placeholder="Filter by Tags"
+                        placeholder={t("Filter by Tags", "Фильтр по тегам")}
                         multi
                     />
                 </div>
             </ErrorBoundary>
 
-            <HeadingTertiary className={Margins.top20}>Plugins</HeadingTertiary>
+            <HeadingTertiary className={Margins.top20}>{t("Plugins", "Плагины")}</HeadingTertiary>
 
             {plugins.length || requiredPlugins.length
                 ? (
                     <div className={cl("grid")}>
                         {plugins.length
                             ? plugins
-                            : <Paragraph>No plugins meet the search criteria.</Paragraph>
+                            : <Paragraph>{t("No plugins meet the search criteria.", "Нет плагинов по заданным критериям.")}</Paragraph>
                         }
                     </div>
                 )
@@ -337,13 +340,13 @@ function PluginSettings() {
             <Divider className={Margins.top20} />
 
             <HeadingTertiary className={classes(Margins.top20, Margins.bottom8)}>
-                Required Plugins
+                {t("Required Plugins", "Обязательные плагины")}
             </HeadingTertiary>
 
             <div className={cl("grid")}>
                 {requiredPlugins.length
                     ? requiredPlugins
-                    : <Paragraph>No plugins meet the search criteria.</Paragraph>
+                    : <Paragraph>{t("No plugins meet the search criteria.", "Нет плагинов по заданным критериям.")}</Paragraph>
                 }
             </div>
         </SettingsTab >
@@ -353,7 +356,7 @@ function PluginSettings() {
 function makeDependencyList(deps: string[]) {
     return (
         <>
-            <Paragraph>This plugin is required by:</Paragraph>
+            <Paragraph>{t("This plugin is required by:", "Этот плагин нужен для:")}</Paragraph>
             {deps.map((dep: string) => <Paragraph key={dep} className={cl("dep-text")}>{dep}</Paragraph>)}
         </>
     );

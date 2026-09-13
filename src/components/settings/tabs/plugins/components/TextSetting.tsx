@@ -17,6 +17,8 @@
 */
 
 import { isSettingDisabled } from "@api/PluginManager";
+import { t } from "@utils/locale";
+import { txPlaceholder } from "@utils/localePlugins";
 import { PluginSettingStringDef } from "@utils/types";
 import { React, TextArea, TextInput, useState } from "@webpack/common";
 
@@ -38,17 +40,17 @@ export function TextSetting({ setting, pluginSettings, definedSettings, id, onCh
     }
 
     return (
-        <SettingsSection name={setting.displayName} id={id} description={setting.description} error={error}>
+        <SettingsSection name={setting.displayName} id={id} description={setting.description} error={error} pluginName={definedSettings.pluginName}>
             {setting.multiline
                 ? <TextArea
-                    placeholder={setting.placeholder ?? "Enter a value"}
+                    placeholder={txPlaceholder(definedSettings.pluginName, id, setting.placeholder) ?? t("Enter a value", "Введите значение")}
                     value={state}
                     onChange={handleChange}
                     disabled={isSettingDisabled(definedSettings, setting)}
                     {...setting.componentProps} />
                 : <TextInput
                     type="text"
-                    placeholder={setting.placeholder ?? "Enter a value"}
+                    placeholder={txPlaceholder(definedSettings.pluginName, id, setting.placeholder) ?? t("Enter a value", "Введите значение")}
                     value={state}
                     onChange={handleChange}
                     maxLength={null}

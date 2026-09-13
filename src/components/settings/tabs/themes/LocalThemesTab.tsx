@@ -16,6 +16,7 @@ import { openPluginModal } from "@components/settings/tabs/plugins/PluginModal";
 import { UserThemeHeader } from "@main/themes";
 import ClientThemePlugin from "@plugins/clientTheme";
 import { classNameFactory } from "@utils/css";
+import { t } from "@utils/locale";
 import { findLazy } from "@webpack";
 import { Forms, useEffect, useRef, useState } from "@webpack/common";
 import type { ComponentType, Ref, SyntheticEvent } from "react";
@@ -125,22 +126,22 @@ export function LocalThemesTab() {
     return (
         <Flex flexDirection="column" gap="1em">
             <Card>
-                <Forms.FormTitle tag="h5">Find Themes:</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">{t("Find Themes:", "Где найти темы:")}</Forms.FormTitle>
                 <Flex gap="0.4em" flexDirection="column" justifyContent="flex-start" className={Margins.bottom8}>
-                    <span>&ndash; <Link href="https://betterdiscord.app/themes">BetterDiscord theme list</Link></span>
+                    <span>&ndash; <Link href="https://betterdiscord.app/themes">{t("BetterDiscord theme list", "Каталог тем BetterDiscord")}</Link></span>
                     <span>&ndash; <Link href="https://github.com/search?q=discord+theme">GitHub</Link></span>
                 </Flex>
-                <Forms.FormText>If using the BD site, click on "Download" and place the downloaded .theme.css file into your themes folder.</Forms.FormText>
+                <Forms.FormText>{t("If using the BD site, click on \"Download\" and place the downloaded .theme.css file into your themes folder.", "На сайте BD нажмите «Download» и положите скачанный .theme.css в папку тем.")}</Forms.FormText>
             </Card>
 
             <Card>
-                <Forms.FormTitle tag="h5">External Resources</Forms.FormTitle>
-                <Forms.FormText>For security reasons, loading resources (styles, fonts, images, ...) from most sites is blocked.</Forms.FormText>
-                <Forms.FormText>Make sure all your assets are hosted on GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts.</Forms.FormText>
+                <Forms.FormTitle tag="h5">{t("External Resources", "Внешние ресурсы")}</Forms.FormTitle>
+                <Forms.FormText>{t("For security reasons, loading resources (styles, fonts, images, ...) from most sites is blocked.", "Из соображений безопасности загрузка ресурсов (стили, шрифты, картинки, ...) с большинства сайтов заблокирована.")}</Forms.FormText>
+                <Forms.FormText>{t("Make sure all your assets are hosted on GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts.", "Размещайте все ресурсы на GitHub, GitLab, Codeberg, Imgur, Discord или Google Fonts.")}</Forms.FormText>
             </Card>
 
             <section>
-                <Forms.FormTitle tag="h5">Local Themes</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">{t("Local Themes", "Локальные темы")}</Forms.FormTitle>
                 <QuickActionCard>
                     <>
                         {IS_WEB ?
@@ -148,7 +149,7 @@ export function LocalThemesTab() {
                                 <QuickAction
                                     text={
                                         <span>
-                                            Upload Theme
+                                            {t("Upload Theme", "Загрузить тему")}
                                             <FileInput
                                                 ref={fileInputRef}
                                                 onChange={async e => {
@@ -165,25 +166,25 @@ export function LocalThemesTab() {
                                 />
                             ) : (
                                 <QuickAction
-                                    text="Open Themes Folder"
+                                    text={t("Open Themes Folder", "Открыть папку тем")}
                                     action={() => VencordNative.themes.openFolder()}
                                     Icon={FolderIcon}
                                 />
                             )}
                         <QuickAction
-                            text="Load missing Themes"
+                            text={t("Load missing Themes", "Загрузить недостающие темы")}
                             action={refreshLocalThemes}
                             Icon={RestartIcon}
                         />
                         <QuickAction
-                            text="Edit QuickCSS"
+                            text={t("Edit QuickCSS", "Редактировать QuickCSS")}
                             action={() => VencordNative.quickCss.openEditor()}
                             Icon={PaintbrushIcon}
                         />
 
                         {isPluginEnabled(ClientThemePlugin.name) && (
                             <QuickAction
-                                text="Edit ClientTheme"
+                                text={t("Edit ClientTheme", "Редактировать ClientTheme")}
                                 action={() => openPluginModal(ClientThemePlugin)}
                                 Icon={PencilIcon}
                             />
