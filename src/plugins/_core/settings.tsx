@@ -21,6 +21,7 @@ import { BackupRestoreIcon, CloudIcon, MainSettingsIcon, PaintbrushIcon, PatchHe
 import { BackupAndRestoreTab, CloudTab, PatchHelperTab, PluginsTab, ThemesTab, UpdaterTab, VencordTab } from "@components/settings/tabs";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
+import { t } from "@utils/locale";
 import definePlugin, { IconProps, OptionType } from "@utils/types";
 import { waitFor } from "@webpack";
 import { React } from "@webpack/common";
@@ -130,13 +131,13 @@ export default definePlugin({
         }
     ],
 
-    buildEntry(options: EntryOptions): SettingsLayoutNode {
-        const { key, title, panelTitle = title, Component, Icon } = options;
+    buildEntry(options: EntryOptions & { titleRu?: string; panelTitleRu?: string; }): SettingsLayoutNode {
+        const { key, title, panelTitle = title, Component, Icon, titleRu, panelTitleRu } = options;
 
         const panel: SettingsLayoutNode = {
             key: key + "_panel",
             type: LayoutTypes.PANEL,
-            useTitle: () => panelTitle,
+            useTitle: () => panelTitleRu ? t(panelTitle, panelTitleRu) : panelTitle,
             buildLayout: () => [{
                 type: LayoutTypes.CATEGORY,
                 key: key + "_category",
@@ -144,7 +145,7 @@ export default definePlugin({
                     type: LayoutTypes.CUSTOM,
                     key: key + "_custom",
                     Component: Component,
-                    useSearchTerms: () => [title]
+                    useSearchTerms: () => titleRu ? [title, titleRu] : [title]
                 }]
             }]
         };
@@ -152,7 +153,7 @@ export default definePlugin({
         return ({
             key,
             type: LayoutTypes.SIDEBAR_ITEM,
-            useTitle: () => title,
+            useTitle: () => titleRu ? t(title, titleRu) : title,
             icon: () => <Icon width={20} height={20} />,
             buildLayout: () => [panel]
         });
@@ -171,45 +172,55 @@ export default definePlugin({
             buildEntry({
                 key: "vencord_main",
                 title: "Vencord",
+                titleRu: "Vencord",
                 panelTitle: "Vencord Settings",
+                panelTitleRu: "Настройки Vencord",
                 Component: VencordTab,
                 Icon: MainSettingsIcon
             }),
             buildEntry({
                 key: "vencord_plugins",
                 title: "Plugins",
+                titleRu: "Плагины",
                 Component: PluginsTab,
                 Icon: PluginsIcon
             }),
             buildEntry({
                 key: "vencord_themes",
                 title: "Themes",
+                titleRu: "Темы",
                 Component: ThemesTab,
                 Icon: PaintbrushIcon
             }),
             !IS_UPDATER_DISABLED && UpdaterTab && buildEntry({
                 key: "vencord_updater",
                 title: "Updater",
+                titleRu: "Обновления",
                 panelTitle: "Vencord Updater",
+                panelTitleRu: "Обновление Vencord",
                 Component: UpdaterTab,
                 Icon: UpdaterIcon
             }),
             buildEntry({
                 key: "vencord_cloud",
                 title: "Cloud",
+                titleRu: "Облако",
                 panelTitle: "Vencord Cloud",
+                panelTitleRu: "Облако Vencord",
                 Component: CloudTab,
                 Icon: CloudIcon
             }),
             buildEntry({
                 key: "vencord_backup_restore",
                 title: "Backup & Restore",
+                titleRu: "Бэкап и восстановление",
                 Component: BackupAndRestoreTab,
                 Icon: BackupRestoreIcon
             }),
             !IS_STANDALONE && PatchHelperTab && buildEntry({
                 key: "vencord_patch_helper",
                 title: "Patch Helper",
+                titleRu: "Помощник патчей",
                 Component: PatchHelperTab,
                 Icon: PatchHelperIcon
             }),
@@ -231,7 +242,7 @@ export default definePlugin({
         const vencordSection: SettingsLayoutNode = {
             key: "vencord_section",
             type: LayoutTypes.SECTION,
-            useTitle: () => "Vencord Settings",
+            useTitle: () => t("Vencord Settings", "Настройки Vencord"),
             buildLayout: () => vencordEntries
         };
 

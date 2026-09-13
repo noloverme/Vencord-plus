@@ -40,6 +40,25 @@ export interface RuPluginStrings {
 }
 
 export const ruPlugins: Record<string, RuPluginStrings> = {
+    // ---- core Settings plugin ----
+    Settings: {
+        d: "Добавляет интерфейс настроек и отладочную информацию",
+        o: {
+            settingsLocation: {
+                d: "Где разместить раздел настроек Vencord",
+                o: {
+                    top: "В самом верху",
+                    aboveNitro: "Выше раздела Nitro",
+                    belowNitro: "Ниже раздела Nitro",
+                    aboveActivity: "Выше настроек активности",
+                    belowActivity: "Ниже настроек активности",
+                    bottom: "В самом низу",
+                },
+            },
+            includeVencordInfoWhenCopying: { d: "Также копировать инфо Vencord (Vencord, Electron, Chromium) при клике по версии внизу настроек" },
+        },
+    },
+
     // ---- fork plugins (noloverme) ----
     FakeBadges: {
         d: "Добавляет кастомный бейдж пользователю 1251559235360133140 и может локально показывать все бейджи Discord",
