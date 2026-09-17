@@ -61,9 +61,9 @@ export const ruPlugins: Record<string, RuPluginStrings> = {
 
     // ---- fork plugins (noloverme) ----
     FakeBadges: {
-        d: "Добавляет кастомный бейдж пользователю 1251559235360133140 и может локально показывать все бейджи Discord",
+        d: "Добавляет кастомный бейдж всем и может локально показывать все бейджи Discord",
         o: {
-            enableCustomBadge: { d: "Включить кастомный бейдж для пользователя 1251559235360133140" },
+            enableCustomBadge: { d: "Включить кастомный бейдж для всех" },
             enableAllBadges: { d: "Включить ВСЕ бейджи Discord локально (Hypesquad, Staff, Partner, BugHunter, EarlySupporter, VerifiedDev, ActiveDev и др.) — видно только вам" },
         },
     },

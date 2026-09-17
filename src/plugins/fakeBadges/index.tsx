@@ -22,7 +22,6 @@ import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { UserStore } from "@webpack/common";
 
-const TARGET_USER_ID = "1251559235360133140";
 const CUSTOM_ICON = "https://cdn.discordapp.com/emojis/1272641575759122578.webp?size=128";
 
 const customBadge: ProfileBadge = {
@@ -30,7 +29,8 @@ const customBadge: ProfileBadge = {
     description: "Великий долбаеб",
     iconSrc: CUSTOM_ICON,
     position: BadgePosition.START,
-    shouldShow: ({ userId }) => userId === TARGET_USER_ID,
+    // no shouldShow on purpose: the badge shows on EVERYONE
+    // for all viewers with the plugin + option enabled
 };
 
 const allBadgesProvider: ProfileBadge = {
@@ -64,7 +64,7 @@ const allBadgesProvider: ProfileBadge = {
 
 const settings = definePluginSettings({
     enableCustomBadge: {
-        description: "Enable custom badge for user 1251559235360133140",
+        description: "Enable custom badge for everyone",
         type: OptionType.BOOLEAN,
         default: true,
         onChange: v => {
@@ -81,7 +81,7 @@ const settings = definePluginSettings({
 
 export default definePlugin({
     name: "FakeBadges",
-    description: "Adds custom badge for user 1251559235360133140 and can show all Discord badges locally",
+    description: "Adds custom badge for everyone and can show all Discord badges locally",
     authors: [Devs.noloverme],
     tags: ["Appearance"],
     settings,
