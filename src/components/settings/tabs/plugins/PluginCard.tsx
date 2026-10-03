@@ -12,7 +12,8 @@ import { AddonCard } from "@components/settings/AddonCard";
 import { t } from "@utils/locale";
 import { tpDescription } from "@utils/localePlugins";
 import { Plugin } from "@utils/types";
-import { React, showToast, Toasts } from "@webpack/common";
+import { ToastPosition } from "@vencord/discord-types/enums";
+import { React, showToast } from "@webpack/common";
 
 import { cl, logger } from ".";
 import { openPluginModal } from "./PluginModal";
@@ -69,9 +70,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             settings.enabled = false;
 
             const msg = t(`Error while ${wasEnabled ? "stopping" : "starting"} plugin ${plugin.name}`, `Ошибка при ${wasEnabled ? "остановке" : "запуске"} плагина ${plugin.name}`);
-            showToast(msg, Toasts.Type.FAILURE, {
-                position: Toasts.Position.BOTTOM,
-            });
+            showToast(msg, "failure", { position: ToastPosition.BOTTOM });
 
             return;
         }

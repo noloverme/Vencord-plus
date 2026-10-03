@@ -53,7 +53,7 @@ type KeysOfType<Object, Type> = {
 
 function Switches() {
     // "locale" subscription so all titles re-render on language switch
-    const settings = useSettings(["useQuickCss", "enableReactDevtools", "frameless", "winNativeTitleBar", "transparent", "winCtrlQ", "disableMinSize", "locale"]);
+    const settings = useSettings(["useQuickCss", "enableReactDevtools", "frameless", "nativeTitleBar", "transparent", "winCtrlQ", "disableMinSize", "locale"]);
 
     const Switches = [
         {
@@ -61,15 +61,11 @@ function Switches() {
             title: t("Enable Custom CSS", "Включить Custom CSS"),
             description: t("Apply your configured QuickCSS", "Применять ваш QuickCSS")
         },
-        !IS_WEB && (!IS_DISCORD_DESKTOP || !IS_WINDOWS ? {
-            key: "frameless",
-            title: t("Disable the window frame", "Убрать рамку окна"),
+        IS_DISCORD_DESKTOP && {
+            key: "nativeTitleBar",
+            title: t("Enable the system's title bar in addition to Discord's custom one", "Включить системный заголовок окна в дополнение к заголовку Discord"),
             restartRequired: true
-        } : {
-            key: "winNativeTitleBar",
-            title: t("Use Windows' native title bar instead of Discord's custom one", "Использовать родной заголовок Windows вместо кастомного Discord"),
-            restartRequired: true
-        }),
+        },
         !IS_WEB && {
             key: "transparent",
             title: t("Enable window transparency", "Включить прозрачность окна"),
