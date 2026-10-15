@@ -13,7 +13,6 @@ import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { relaunch } from "@utils/native";
 import { changes, checkForUpdates, update, updateError } from "@utils/updater";
-import { ToastPosition } from "@vencord/discord-types/enums";
 import { Button, ConfirmModal, Forms, openModal, React, showToast, useState } from "@webpack/common";
 
 import { runWithDispatch } from "./runWithDispatch";
@@ -134,9 +133,7 @@ export function Updatable(props: CommonProps) {
                         } else {
                             setUpdates([]);
 
-                            showToast(t("No updates found!", "Обновлений нет!"), "message", {
-                                position: ToastPosition.BOTTOM
-                            });
+                            showToast({ text: t("No updates found!", "Обновлений нет!"), position: "bottom" });
                         }
                     })}
                 >
