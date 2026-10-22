@@ -11,9 +11,9 @@ import { CspBlockedUrls, useCspErrors } from "@utils/cspViolations";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
-import { relaunch } from "@utils/native";
+import { promptToRestart } from "@utils/promptToRestart";
 import { useForceUpdater } from "@utils/react";
-import { Button, ConfirmModal, Forms, openModal } from "@webpack/common";
+import { Button, Forms } from "@webpack/common";
 
 export function CspErrorCard() {
     if (IS_WEB) return null;
@@ -38,18 +38,7 @@ export function CspErrorCard() {
         });
 
         forceUpdate();
-
-        openModal(props => (
-            <ConfirmModal
-                {...props}
-                title={t("Restart Required", "Нужен перезапуск")}
-                subtitle={t("A restart is required to apply this change", "Чтобы применить изменение, нужен перезапуск")}
-                confirmText={t("Restart now", "Перезапустить")}
-                cancelText={t("Later!", "Позже!")}
-                variant="primary"
-                onConfirm={relaunch}
-            />
-        ));
+        promptToRestart("relaunch");
     };
 
     const hasImgurHtmlDomain = errors.some(isImgurHtmlDomain);
