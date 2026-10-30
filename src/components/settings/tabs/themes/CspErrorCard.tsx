@@ -4,16 +4,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { Button } from "@components/Button";
 import { Divider } from "@components/Divider";
 import { ErrorCard } from "@components/ErrorCard";
+import { Heading } from "@components/Heading";
 import { Link } from "@components/Link";
+import { Paragraph } from "@components/Paragraph";
 import { CspBlockedUrls, useCspErrors } from "@utils/cspViolations";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { promptToRestart } from "@utils/promptToRestart";
 import { useForceUpdater } from "@utils/react";
-import { Button, Forms } from "@webpack/common";
 
 export function CspErrorCard() {
     if (IS_WEB) return null;
@@ -45,21 +47,21 @@ export function CspErrorCard() {
 
     return (
         <ErrorCard>
-            <Forms.FormTitle tag="h5">{t("Blocked Resources", "Заблокированные ресурсы")}</Forms.FormTitle>
-            <Forms.FormText>{t("Some images, styles, or fonts were blocked because they come from disallowed domains.", "Некоторые картинки, стили или шрифты заблокированы — они с неразрешённых доменов.")}</Forms.FormText>
-            <Forms.FormText>{t("It is highly recommended to move them to GitHub or Imgur. But you may also allow domains if you fully trust them.", "Рекомендуется перенести их на GitHub или Imgur. Но можно и разрешить домены, если полностью им доверяете.")}</Forms.FormText>
-            <Forms.FormText>
+            <Heading>{t("Blocked Resources", "Заблокированные ресурсы")}</Heading>
+            <Paragraph>{t("Some images, styles, or fonts were blocked because they come from disallowed domains.", "Некоторые картинки, стили или шрифты заблокированы — они с неразрешённых доменов.")}</Paragraph>
+            <Paragraph>{t("It is highly recommended to move them to GitHub or Imgur. But you may also allow domains if you fully trust them.", "Рекомендуется перенести их на GitHub или Imgur. Но можно и разрешить домены, если полностью им доверяете.")}</Paragraph>
+            <Paragraph>
                 {t("After allowing a domain, you have to fully close (from tray / task manager) and restart ", "После разрешения домена полностью закройте (из трея / диспетчера задач) и перезапустите ")}{IS_DISCORD_DESKTOP ? "Discord" : "Vesktop"}{t(" to apply the change.", " для применения.")}
-            </Forms.FormText>
+            </Paragraph>
 
-            <Forms.FormTitle tag="h5" className={classes(Margins.top16, Margins.bottom8)}>{t("Blocked URLs", "Заблокированные URL")}</Forms.FormTitle>
+            <Heading className={classes(Margins.top16, Margins.bottom8)}>{t("Blocked URLs", "Заблокированные URL")}</Heading>
             <div className="vc-settings-csp-list">
                 {errors.map((url, i) => (
                     <div key={url}>
                         {i !== 0 && <Divider className={Margins.bottom8} />}
                         <div className="vc-settings-csp-row">
                             <Link href={url}>{url}</Link>
-                            <Button color={Button.Colors.PRIMARY} onClick={() => allowUrl(url)} disabled={isImgurHtmlDomain(url)}>
+                            <Button variant="secondary" onClick={() => allowUrl(url)} disabled={isImgurHtmlDomain(url)}>
                                 {t("Allow", "Разрешить")}
                             </Button>
                         </div>
@@ -70,10 +72,10 @@ export function CspErrorCard() {
             {hasImgurHtmlDomain && (
                 <>
                     <Divider className={classes(Margins.top8, Margins.bottom16)} />
-                    <Forms.FormText>
+                    <Paragraph>
                         {t("Imgur links should be direct links in the form of ", "Ссылки Imgur должны быть прямыми, вида ")}<code>https://i.imgur.com/...</code>
-                    </Forms.FormText>
-                    <Forms.FormText>{t("To obtain a direct link, right-click the image and select \"Copy image address\".", "Чтобы получить прямую ссылку, кликните по картинке правой кнопкой и выберите «Копировать адрес изображения».")}</Forms.FormText>
+                    </Paragraph>
+                    <Paragraph>{t("To obtain a direct link, right-click the image and select \"Copy image address\".", "Чтобы получить прямую ссылку, кликните по картинке правой кнопкой и выберите «Копировать адрес изображения».")}</Paragraph>
                 </>
             )}
         </ErrorCard>

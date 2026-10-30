@@ -18,16 +18,16 @@
 
 import "./styles.css";
 
-import { BaseText } from "@components/BaseText";
 import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
+import { Heading } from "@components/Heading";
 import { Link } from "@components/Link";
 import { Margins } from "@components/margins";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
 import { t } from "@utils/locale";
 import { getStylusWebStoreUrl } from "@utils/web";
-import { Forms, React, TabBar, useState } from "@webpack/common";
+import { React, TabBar, useState } from "@webpack/common";
 
 import { CspErrorCard } from "./CspErrorCard";
 import { LocalThemesTab } from "./LocalThemesTab";
@@ -68,7 +68,7 @@ function ThemesTab() {
                 <CspErrorCard />
 
                 <Card variant="warning">
-                    <BaseText tag="h3" size="md" weight="medium" className={Margins.bottom8}>{t("Theme Performance", "Производительность тем")}</BaseText>
+                    <Heading tag="h3" className={Margins.bottom8}>{t("Theme Performance", "Производительность тем")}</Heading>
                     <Paragraph>
                         {t("Themes and custom CSS have the potential to cause major lag! If you experience performance issues, try disabling your themes and CSS to see if they're the cause. The most common cause of lag is the ", "Темы и кастомный CSS могут сильно лагать! При проблемах с производительностью попробуйте отключить темы и CSS. Чаще всего виноват оператор ")}<code>:has()</code>.
                     </Paragraph>
@@ -85,11 +85,11 @@ function UserscriptThemesTab() {
     return (
         <SettingsTab>
             <Card variant="danger">
-                <Forms.FormTitle tag="h5">{t("Themes are not supported on the Userscript!", "Темы не поддерживаются в юзерскрипте!")}</Forms.FormTitle>
+                <Heading>{t("Themes are not supported on the Userscript!", "Темы не поддерживаются в юзерскрипте!")}</Heading>
 
-                <Forms.FormText>
+                <Paragraph>
                     {t("You can instead install themes with the ", "Вместо этого ставьте темы через ")}<Link href={getStylusWebStoreUrl()}>{t("Stylus extension", "расширение Stylus")}</Link>!
-                </Forms.FormText>
+                </Paragraph>
             </Card>
         </SettingsTab>
     );

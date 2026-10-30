@@ -21,10 +21,11 @@ import "./styles.css";
 import * as DataStore from "@api/DataStore";
 import { isPluginEnabled } from "@api/PluginManager";
 import { useSettings } from "@api/Settings";
+import { Button } from "@components/Button";
 import { Card } from "@components/Card";
 import { Divider } from "@components/Divider";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { Heading, HeadingTertiary } from "@components/Heading";
+import { Heading } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
 import { ChangeList } from "@utils/ChangeList";
@@ -39,7 +40,7 @@ import { PluginTarget } from "@utils/pluginTargets";
 import { promptToRestart } from "@utils/promptToRestart";
 import { useAwaiter, useCleanupEffect } from "@utils/react";
 import { PluginTag, PluginTags } from "@utils/types";
-import { Button, lodash, React, SearchableSelect, Select, TextInput, Tooltip, useMemo, useRef, useState } from "@webpack/common";
+import { lodash, React, SearchableSelect, Select, TextInput, Tooltip, useMemo, useRef, useState } from "@webpack/common";
 import { JSX } from "react";
 
 import Plugins, { ExcludedPlugins, PluginMeta } from "~plugins";
@@ -56,7 +57,7 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
             {required
                 ? (
                     <>
-                        <HeadingTertiary>{t("Restart required!", "Нужен перезапуск!")}</HeadingTertiary>
+                        <Heading tag="h4">{t("Restart required!", "Нужен перезапуск!")}</Heading>
                         <Paragraph className={cl("dep-text")}>
                             {t("Restart now to apply new plugins and their settings", "Перезапустите, чтобы применить плагины и их настройки")}
                         </Paragraph>
@@ -67,7 +68,7 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
                 )
                 : (
                     <>
-                        <HeadingTertiary>{t("Plugin Management", "Управление плагинами")}</HeadingTertiary>
+                        <Heading tag="h4">{t("Plugin Management", "Управление плагинами")}</Heading>
                         <Paragraph>{t("Press the cog wheel or info icon to get more info on a plugin", "Нажмите на шестерёнку или иконку информации для подробностей о плагине")}</Paragraph>
                         <Paragraph>{t("Plugins with a cog wheel have settings you can modify!", "У плагинов с шестерёнкой есть настраиваемые параметры!")}</Paragraph>
                     </>
@@ -129,7 +130,7 @@ function PluginSettings() {
         if (changes.hasChanges)
             promptToRestart("reload", {
                 children: <>
-                    <Heading tag="h5">{t("The following plugins require a restart:", "Эти плагины требуют перезапуска:")}</Heading>
+                    <Heading>{t("The following plugins require a restart:", "Эти плагины требуют перезапуска:")}</Heading>
                     <Paragraph>{Array.from(changes, k => k.split(".")[0]).join(", ")}</Paragraph>
                 </>
             });
@@ -266,9 +267,9 @@ function PluginSettings() {
 
             <UIElementsButton />
 
-            <HeadingTertiary className={classes(Margins.top20, Margins.bottom8)}>
+            <Heading tag="h4" className={classes(Margins.top20, Margins.bottom8)}>
                 {t("Filters", "Фильтры")}
-            </HeadingTertiary>
+            </Heading>
 
             <ErrorBoundary noop>
                 <TextInput
@@ -309,7 +310,7 @@ function PluginSettings() {
                 </div>
             </ErrorBoundary>
 
-            <HeadingTertiary className={Margins.top20}>{t("Plugins", "Плагины")}</HeadingTertiary>
+            <Heading tag="h4" className={Margins.top20}>{t("Plugins", "Плагины")}</Heading>
 
             {plugins.length || requiredPlugins.length
                 ? (
@@ -326,9 +327,9 @@ function PluginSettings() {
 
             <Divider className={Margins.top20} />
 
-            <HeadingTertiary className={classes(Margins.top20, Margins.bottom8)}>
+            <Heading tag="h4" className={classes(Margins.top20, Margins.bottom8)}>
                 {t("Required Plugins", "Обязательные плагины")}
-            </HeadingTertiary>
+            </Heading>
 
             <div className={cl("grid")}>
                 {requiredPlugins.length

@@ -20,7 +20,9 @@ import { openNotificationLogModal } from "@api/Notifications/notificationLog";
 import { useSettings } from "@api/Settings";
 import { Divider } from "@components/Divider";
 import { FormSwitch } from "@components/FormSwitch";
+import { Heading } from "@components/Heading";
 import { FolderIcon, GithubIcon, LogIcon, PaintbrushIcon, RestartIcon } from "@components/Icons";
+import { Paragraph } from "@components/Paragraph";
 import { QuickAction, QuickActionCard } from "@components/settings/QuickAction";
 import { SpecialCard } from "@components/settings/SpecialCard";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
@@ -35,7 +37,7 @@ import { Margins } from "@utils/margins";
 import { identity, isPluginDev } from "@utils/misc";
 import { relaunch } from "@utils/native";
 import { promptToRestart } from "@utils/promptToRestart";
-import { Forms, React, Select, useMemo, UserStore } from "@webpack/common";
+import { React, Select, useMemo, UserStore } from "@webpack/common";
 
 import { DonateButtonComponent, isDonor } from "./DonateButton";
 import { MacOSVibrancySettings } from "./MacVibrancySettings";
@@ -143,7 +145,7 @@ function LanguageSection() {
     useT();
     return (
         <section className={Margins.top16}>
-            <Forms.FormTitle tag="h5">{t("Language / Язык", "Язык / Language")}</Forms.FormTitle>
+            <Heading>{t("Language / Язык", "Язык / Language")}</Heading>
             <Select
                 placeholder={t("Interface language", "Язык интерфейса")}
                 options={[
@@ -210,7 +212,7 @@ function VencordSettings() {
             )}
 
             <section>
-                <Forms.FormTitle tag="h5">{t("Quick Actions", "Быстрые действия")}</Forms.FormTitle>
+                <Heading>{t("Quick Actions", "Быстрые действия")}</Heading>
 
                 <QuickActionCard>
                     <QuickAction
@@ -252,13 +254,13 @@ function VencordSettings() {
             <Divider />
 
             <section className={Margins.top16}>
-                <Forms.FormTitle tag="h5">{t("Settings", "Настройки")}</Forms.FormTitle>
-                <Forms.FormText className={Margins.bottom20} style={{ color: "var(--text-muted)" }}>
+                <Heading>{t("Settings", "Настройки")}</Heading>
+                <Paragraph className={Margins.bottom20} style={{ color: "var(--text-muted)" }}>
                     {t("Hint: You can change the position of this settings section in the ", "Подсказка: положение этого раздела можно изменить в ")}{" "}
                     <a onClick={() => openPluginModal(SettingsPlugin)}>
                         {t("settings of the Settings plugin", "настройках плагина Settings")}
                     </a>!
-                </Forms.FormText>
+                </Paragraph>
 
                 <div className="vc-settings-switches">
                     <Switches />

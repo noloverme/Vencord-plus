@@ -4,16 +4,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { Button } from "@components/Button";
 import { Card } from "@components/Card";
 import { ErrorCard } from "@components/ErrorCard";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
+import { Paragraph } from "@components/Paragraph";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
-import { relaunch } from "@utils/native";
+import { promptToRestart } from "@utils/promptToRestart";
 import { changes, checkForUpdates, update, updateError } from "@utils/updater";
-import { Button, ConfirmModal, Forms, openModal, React, showToast, useState } from "@webpack/common";
+import { React, showToast, useState } from "@webpack/common";
 
 import { runWithDispatch } from "./runWithDispatch";
 
@@ -60,9 +62,9 @@ export function Changes({ updates, repo, repoPending }: CommonProps & { updates:
 export function Newer(props: CommonProps) {
     return (
         <>
-            <Forms.FormText className={Margins.bottom8}>
+            <Paragraph className={Margins.bottom8}>
                 {t("Your local copy has more recent commits. Please stash or reset them.", "Ваша локальная копия новее. Сделайте stash или reset.")}
-            </Forms.FormText>
+            </Paragraph>
             <Changes {...props} updates={changes} />
         </>
     );
@@ -79,15 +81,15 @@ export function Updatable(props: CommonProps) {
         <>
             {!updates && updateError ? (
                 <>
-                    <Forms.FormText>{t("Failed to check updates. Check the console for more info", "Не удалось проверить обновления. Смотрите консоль")}</Forms.FormText>
+                    <Paragraph>{t("Failed to check updates. Check the console for more info", "Не удалось проверить обновления. Смотрите консоль")}</Paragraph>
                     <ErrorCard style={{ padding: "1em" }}>
                         <p>{updateError.stderr || updateError.stdout || t("An unknown error occurred", "Неизвестная ошибка")}</p>
                     </ErrorCard>
                 </>
             ) : (
-                <Forms.FormText className={Margins.bottom8}>
+                <Paragraph className={Margins.bottom8}>
                     {isOutdated ? (updates.length === 1 ? t("There is 1 Update", "Есть 1 обновление") : t(`There are ${updates.length} Updates`, `Обновлений: ${updates.length}`)) : t("Up to Date!", "Всё актуально!")}
-                </Forms.FormText>
+                </Paragraph>
             )}
 
             {isOutdated && <Changes updates={updates} {...props} />}
@@ -100,22 +102,11 @@ export function Updatable(props: CommonProps) {
                             if (await update()) {
                                 setUpdates([]);
 
-                                await new Promise<void>(r => {
-                                    openModal(props => (
-                                        <ConfirmModal
-                                            {...props}
-                                            title={t("Update Success!", "Обновлено!")}
-                                            subtitle={t("Successfully updated. Restart now to apply the changes?", "Успешно обновлено. Перезапустить для применения?")}
-                                            confirmText={t("Restart", "Перезапустить")}
-                                            cancelText={t("Not now!", "Не сейчас!")}
-                                            variant="primary"
-                                            onConfirm={() => {
-                                                relaunch();
-                                                r();
-                                            }}
-                                            onCancel={r}
-                                        />
-                                    ));
+                                promptToRestart("relaunch", {
+                                    title: t("Update Success!", "Обновлено!"),
+                                    subtitle: t("Successfully updated. Restart now to apply the changes?", "Успешно обновлено. Перезапустить для применения?"),
+                                    confirmText: t("Restart", "Перезапустить"),
+                                    cancelText: t("Not now!", "Не сейчас!")
                                 });
                             }
                         })}

@@ -17,14 +17,15 @@
 */
 
 import { downloadSettingsBackup, uploadSettingsBackup } from "@api/SettingsSync/offline";
+import { Button } from "@components/Button";
 import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
 import { Heading } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { Text } from "@components/Text";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
-import { Button, Text } from "@webpack/common";
 
 function BackupAndRestoreTab() {
     return (
@@ -35,12 +36,12 @@ function BackupAndRestoreTab() {
                     <Paragraph>{t("Importing a settings file will overwrite your current settings.", "Импорт файла настроек перезапишет текущие настройки.")}</Paragraph>
                 </Card>
 
-                <Text variant="text-md/normal" className={Margins.bottom8}>
+                <Paragraph size="md" className={Margins.bottom8}>
                     {t("You can import and export your Vencord settings as a JSON file. This allows you to easily transfer your settings to another device, or recover your settings after reinstalling Vencord or Discord.", "Настройки Vencord можно импортировать и экспортировать как JSON-файл. Так легко перенести настройки на другое устройство или восстановить после переустановки Vencord/Discord.")}
-                </Text>
+                </Paragraph>
 
                 <Heading tag="h4">{t("Settings Export contains:", "Экспорт содержит:")}</Heading>
-                <Text variant="text-md/normal" className={Margins.bottom8}>
+                <Text size="md" className={Margins.bottom8}>
                     <ul>
                         <li>&mdash; {t("Custom QuickCSS", "Кастомный QuickCSS")}</li>
                         <li>&mdash; {t("Theme Links", "Ссылки на темы")}</li>

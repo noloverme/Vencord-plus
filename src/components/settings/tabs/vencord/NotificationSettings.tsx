@@ -6,21 +6,24 @@
 
 import { openNotificationLogModal } from "@api/Notifications/notificationLog";
 import { useSettings } from "@api/Settings";
+import { Button } from "@components/Button";
 import { ErrorCard } from "@components/ErrorCard";
 import { Flex } from "@components/Flex";
+import { Heading } from "@components/Heading";
+import { Paragraph } from "@components/Paragraph";
 import { t, useT } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
-import { Button, Forms, Modal,openModal, Select, Slider } from "@webpack/common";
+import { Modal, openModal, Select, Slider } from "@webpack/common";
 
 export function NotificationSection() {
     useT();
     return (
         <section className={Margins.top16}>
-            <Forms.FormTitle tag="h5">{t("Notifications", "Уведомления")}</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom8}>
+            <Heading>{t("Notifications", "Уведомления")}</Heading>
+            <Paragraph className={Margins.bottom8}>
                 {t("Settings for Notifications sent by Vencord. This does NOT include Discord notifications (messages, etc)", "Настройки уведомлений от Vencord. Уведомления самого Discord (сообщения и т.д.) сюда не входят.")}
-            </Forms.FormText>
+            </Paragraph>
             <Flex>
                 <Button onClick={openNotificationSettingsModal}>
                     {t("Notification Settings", "Настройки уведомлений")}
@@ -51,20 +54,20 @@ function NotificationSettings() {
 
     return (
         <>
-            <Forms.FormTitle tag="h5">{t("Notification Style", "Стиль уведомлений")}</Forms.FormTitle>
+            <Heading>{t("Notification Style", "Стиль уведомлений")}</Heading>
             {settings.useNative !== "never" && Notification?.permission === "denied" && (
                 <ErrorCard style={{ padding: "1em" }} className={Margins.bottom8}>
-                    <Forms.FormTitle tag="h5">{t("Desktop Notification Permission denied", "Нет разрешения на десктоп-уведомления")}</Forms.FormTitle>
-                    <Forms.FormText>{t("You have denied Notification Permissions. Thus, Desktop notifications will not work!", "Вы запретили уведомления. Десктоп-уведомления работать не будут!")}</Forms.FormText>
+                    <Heading>{t("Desktop Notification Permission denied", "Нет разрешения на десктоп-уведомления")}</Heading>
+                    <Paragraph>{t("You have denied Notification Permissions. Thus, Desktop notifications will not work!", "Вы запретили уведомления. Десктоп-уведомления работать не будут!")}</Paragraph>
                 </ErrorCard>
             )}
-            <Forms.FormText className={Margins.bottom8}>
+            <Paragraph className={Margins.bottom8}>
                 {t("Some plugins may show you notifications. These come in two styles:", "Некоторые плагины показывают уведомления. Есть два стиля:")}
                 <ul>
                     <li><strong>{t("Vencord Notifications", "Уведомления Vencord")}</strong>: {t("These are in-app notifications", "Встроенные уведомления внутри приложения")}</li>
                     <li><strong>{t("Desktop Notifications", "Десктоп-уведомления")}</strong>: {t("Native Desktop notifications (like when you get a ping)", "Системные уведомления (как при пинге)")}</li>
                 </ul>
-            </Forms.FormText>
+            </Paragraph>
             <Select
                 placeholder={t("Notification Style", "Стиль уведомлений")}
                 options={[
@@ -78,7 +81,7 @@ function NotificationSettings() {
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>{t("Notification Position", "Позиция уведомлений")}</Forms.FormTitle>
+            <Heading className={Margins.top16 + " " + Margins.bottom8}>{t("Notification Position", "Позиция уведомлений")}</Heading>
             <Select
                 isDisabled={settings.useNative === "always"}
                 placeholder={t("Notification Position", "Позиция уведомлений")}
@@ -91,8 +94,8 @@ function NotificationSettings() {
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>{t("Notification Timeout", "Время показа")}</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom16}>{t("Set to 0s to never automatically time out", "0 — не скрывать автоматически")}</Forms.FormText>
+            <Heading className={Margins.top16 + " " + Margins.bottom8}>{t("Notification Timeout", "Время показа")}</Heading>
+            <Paragraph className={Margins.bottom16}>{t("Set to 0s to never automatically time out", "0 — не скрывать автоматически")}</Paragraph>
             <Slider
                 disabled={settings.useNative === "always"}
                 markers={[0, 1000, 2500, 5000, 10_000, 20_000]}
@@ -105,11 +108,11 @@ function NotificationSettings() {
                 stickToMarkers={false}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>{t("Notification Log Limit", "Лимит журнала")}</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom16}>
+            <Heading className={Margins.top16 + " " + Margins.bottom8}>{t("Notification Log Limit", "Лимит журнала")}</Heading>
+            <Paragraph className={Margins.bottom16}>
                 {t("The amount of notifications to save in the log until old ones are removed.", "Сколько уведомлений хранить в журнале до удаления старых.")}
                 {t("Set to ", "Значение ")}<code>0</code>{t(" to disable Notification log and ", " отключает журнал, а ")}<code>∞</code>{t(" to never automatically remove old Notifications", " — старые уведомления не удаляются")}
-            </Forms.FormText>
+            </Paragraph>
             <Slider
                 markers={[0, 25, 50, 75, 100, 200]}
                 minValue={0}

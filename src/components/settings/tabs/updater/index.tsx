@@ -22,7 +22,7 @@ import { Card } from "@components/Card";
 import { Divider } from "@components/Divider";
 import { Flex } from "@components/Flex";
 import { FormSwitch } from "@components/FormSwitch";
-import { HeadingSecondary } from "@components/Heading";
+import { Heading } from "@components/Heading";
 import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
@@ -31,7 +31,7 @@ import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { useAwaiter } from "@utils/react";
 import { getRepo, isNewer, UpdateLogger } from "@utils/updater";
-import { Forms, React } from "@webpack/common";
+import { React } from "@webpack/common";
 
 import gitHash from "~git-hash";
 
@@ -45,7 +45,7 @@ function VesktopSection() {
     return (
         <Flex className={Margins.bottom20} flexDirection="column" gap="1em">
             <Card variant="info">
-                <HeadingSecondary>Vesktop & Vencord</HeadingSecondary>
+                <Heading tag="h3">Vesktop & Vencord</Heading>
                 <Paragraph>{t("Vesktop and Vencord are two separate things. This updater is for Vencord.", "Vesktop и Vencord — разные вещи. Этот апдейтер — для Vencord.")}</Paragraph>
                 <Paragraph className={Margins.top8}>
                     {t("You receive separate popups for Vesktop updates. You can also manually update by installing the ", "Обновления Vesktop приходят отдельно. Можно обновиться вручную, установив ")}<Link href="https://vesktop.dev/install">{t("latest version", "последнюю версию")}</Link>.
@@ -54,7 +54,7 @@ function VesktopSection() {
 
             {isVesktopOutdated && (
                 <Card variant="warning">
-                    <HeadingSecondary>{t("Vesktop Outdated", "Vesktop устарел")}</HeadingSecondary>
+                    <Heading tag="h3">{t("Vesktop Outdated", "Vesktop устарел")}</Heading>
                     <Flex flexDirection="column" gap="0.5em">
                         <Paragraph>{t("Your version of Vesktop is outdated!", "Ваша версия Vesktop устарела!")}</Paragraph>
                         <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>{t("Open Vesktop Updater", "Открыть апдейтер Vesktop")}</Button>
@@ -101,9 +101,9 @@ function Updater() {
                 />
             </div>
 
-            <Forms.FormTitle tag="h5" className={Margins.top20}>{t("Repo", "Репозиторий")}</Forms.FormTitle>
+            <Heading className={Margins.top20}>{t("Repo", "Репозиторий")}</Heading>
 
-            <Forms.FormText>
+            <Paragraph>
                 {repoPending
                     ? repo
                     : err
@@ -116,11 +116,11 @@ function Updater() {
                 }
                 {" "}
                 (<HashLink hash={gitHash} repo={repo} disabled={repoPending} />)
-            </Forms.FormText>
+            </Paragraph>
 
             <Divider className={classes(Margins.top16, Margins.bottom16)} />
 
-            <Forms.FormTitle tag="h5">{t("Updates", "Обновления")}</Forms.FormTitle>
+            <Heading>{t("Updates", "Обновления")}</Heading>
 
             {isNewer
                 ? <Newer {...commonProps} />

@@ -19,7 +19,6 @@
 import { useSettings } from "@api/Settings";
 import { authorizeCloud, deauthorizeCloud } from "@api/SettingsSync/cloudSetup";
 import { deleteCloudSettings, eraseAllCloudData, getCloudSettings, getCloudSyncDirection, putCloudSettings, setCloudSyncDirection } from "@api/SettingsSync/cloudSync";
-import { BaseText } from "@components/BaseText";
 import { Button, ButtonProps } from "@components/Button";
 import { CheckedTextInput } from "@components/CheckedTextInput";
 import { Divider } from "@components/Divider";
@@ -31,11 +30,12 @@ import { CloudDownloadIcon, CloudUploadIcon, DeleteIcon, RestartIcon } from "@co
 import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { confirmAction } from "@utils/discord";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
-import { ConfirmModal,openModal, Select, Tooltip, useState } from "@webpack/common";
+import { Select, Tooltip, useState } from "@webpack/common";
 
 function validateUrl(url: string) {
     try {
@@ -47,14 +47,9 @@ function validateUrl(url: string) {
 }
 
 const SectionHeading = ({ text }: { text: string; }) => (
-    <BaseText
-        tag="h5"
-        size="lg"
-        weight="semibold"
-        className={Margins.bottom16}
-    >
+    <Heading tag="h1" className={Margins.bottom16}>
         {text}
-    </BaseText>
+    </Heading>
 );
 
 function ButtonWithIcon({ children, Icon, className, ...buttonProps }: ButtonProps & { Icon: IconComponent; }) {
@@ -88,7 +83,7 @@ function CloudSetupSection() {
                         cloud.authenticated = v;
                 }}
             />
-            <Heading tag="h5" className={Margins.top16}>{t("Backend URL", "URL бэкенда")}</Heading>
+            <Heading className={Margins.top16}>{t("Backend URL", "URL бэкенда")}</Heading>
             <Paragraph className={Margins.bottom8}>
                 {t("Which backend to use when using cloud integrations.", "Какой бэкенд использовать для облачной интеграции.")}
             </Paragraph>
@@ -141,7 +136,7 @@ function SettingsSyncSection() {
                 />
 
                 <div>
-                    <Heading tag="h5">
+                    <Heading>
                         {t("Sync Rules for This Device", "Правила синхронизации для этого устройства")}
                     </Heading>
                     <Paragraph className={Margins.bottom8}>
@@ -225,16 +220,15 @@ function ResetSection() {
                 <ButtonWithIcon
                     variant="dangerPrimary"
                     disabled={!authenticated}
-                    onClick={() => openModal(props => (
-                        <ConfirmModal
-                            {...props}
-                            title={t("Are you sure?", "Точно?")}
-                            subtitle={t("Once your data is erased, we cannot recover it. There's no going back!", "После удаления данные не восстановить. Пути назад нет!")}
-                            onConfirm={eraseAllCloudData}
-                            confirmText={t("Erase it!", "Стереть!")}
-                            cancelText={t("Nevermind", "Отмена")}
-                        />
-                    ))}
+                    onClick={() =>
+                        confirmAction({
+                            title: t("Are you sure?", "Точно?"),
+                            subtitle: t("Once your data is erased, we cannot recover it. There's no going back!", "После удаления данные не восстановить. Пути назад нет!"),
+                            confirmText: t("Erase it!", "Стереть!"),
+                            cancelText: t("Nevermind", "Отмена"),
+                            onConfirm: eraseAllCloudData,
+                        })
+                    }
                     Icon={DeleteIcon}
                 >
                     {t("Delete your Cloud Account", "Удалить облачный аккаунт")}

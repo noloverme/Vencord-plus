@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { Paragraph } from "@components/Paragraph";
 import { classNameFactory } from "@utils/css";
 import { t } from "@utils/locale";
 import { txDesc, txName } from "@utils/localePlugins";
 import { classes } from "@utils/misc";
 import { wordsFromCamel, wordsToTitle } from "@utils/text";
 import { DefinedSettings, PluginSettingDefCommon } from "@utils/types";
-import { Text } from "@webpack/common";
 import { PropsWithChildren } from "react";
 
 export const cl = classNameFactory("vc-plugins-setting-");
@@ -54,12 +54,12 @@ export function SettingsSection({ tag: Tag = "div", name, id, description, error
         <Tag className={cl("section")}>
             <div className={classes(cl("content"), inlineSetting && cl("inline"))}>
                 <div className={cl("label")}>
-                    <Text className={cl("title")} variant="text-md/medium">{tName ?? wordsToTitle(wordsFromCamel(id))}</Text>
-                    {tDesc && <Text className={cl("description")} variant="text-sm/normal">{tDesc}</Text>}
+                    <Paragraph size="md" weight="medium" className={cl("title")}>{tName ?? wordsToTitle(wordsFromCamel(id))}</Paragraph>
+                    {tDesc && <Paragraph className={cl("description")}>{tDesc}</Paragraph>}
                 </div>
                 {children}
             </div>
-            {error && <Text className={cl("error")} variant="text-sm/normal">{error}</Text>}
+            {error && <Paragraph className={cl("error")}>{error}</Paragraph>}
         </Tag>
     );
 }

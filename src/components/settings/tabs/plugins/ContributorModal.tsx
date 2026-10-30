@@ -7,14 +7,16 @@
 import "./ContributorModal.css";
 
 import { useSettings } from "@api/Settings";
+import { Heading } from "@components/Heading";
 import { Link } from "@components/Link";
+import { Paragraph } from "@components/Paragraph";
 import { DevsById } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { fetchUserProfile } from "@utils/discord";
 import { isRU, t } from "@utils/locale";
 import { classes, pluralise } from "@utils/misc";
 import { RenderModalProps, User } from "@vencord/discord-types";
-import { Forms, Modal, openModal, showToast, useEffect, useMemo, UserProfileStore, useStateFromStores } from "@webpack/common";
+import { Modal, openModal, showToast, useEffect, useMemo, UserProfileStore, useStateFromStores } from "@webpack/common";
 
 import Plugins from "~plugins";
 
@@ -71,7 +73,7 @@ function ContributorModal({ user, modalProps }: { user: User; modalProps: Render
                         src={user.getAvatarURL(void 0, 512, true)}
                         alt=""
                     />
-                    <Forms.FormTitle tag="h2" className={cl("name")}>{user.username}</Forms.FormTitle>
+                    <Heading tag="h2" className={cl("name")}>{user.username}</Heading>
 
                     <div className={classes("vc-settings-modal-links", cl("links"))}>
                         {website && (
@@ -92,17 +94,17 @@ function ContributorModal({ user, modalProps }: { user: User; modalProps: Render
             subtitle={
                 plugins.length
                     ? (
-                        <Forms.FormText>
+                        <Paragraph>
                             {isRU()
                                 ? <>Этот человек {ContributedHyperLink} в {plugins.length} {pluralRu(plugins.length, "плагин", "плагина", "плагинов")}!</>
                                 : <>This person has {ContributedHyperLink} to {pluralise(plugins.length, "plugin")}!</>
                             }
-                        </Forms.FormText>
+                        </Paragraph>
                     )
                     : (
-                        <Forms.FormText>
+                        <Paragraph>
                             {t("This person has not made any plugins. They likely ", "У этого человека нет плагинов. Вероятно, он ")}{ContributedHyperLink}{t(" to Vencord in other ways!", " в Vencord иначе!")}
-                        </Forms.FormText>
+                        </Paragraph>
                     )
             }
         >

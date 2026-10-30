@@ -6,11 +6,12 @@
 
 import { useSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { Heading } from "@components/Heading";
 import { IS_MAC } from "@utils/constants";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
-import { Forms, Select } from "@webpack/common";
+import { Select } from "@webpack/common";
 
 export function MacOSVibrancySettings() {
     const settings = useSettings(["macosVibrancyStyle", "locale"]);
@@ -19,7 +20,7 @@ export function MacOSVibrancySettings() {
 
     return (
         <ErrorBoundary noop>
-            <Forms.FormTitle tag="h5">{t("MacOS Window vibrancy style (requires restart)", "Стиль вибрации окна MacOS (нужен перезапуск)")}</Forms.FormTitle>
+            <Heading>{t("MacOS Window vibrancy style (requires restart)", "Стиль вибрации окна MacOS (нужен перезапуск)")}</Heading>
             <Select
                 className={Margins.bottom20}
                 placeholder={t("Window vibrancy style", "Стиль вибрации окна")}

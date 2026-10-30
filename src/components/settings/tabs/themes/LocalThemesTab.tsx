@@ -8,9 +8,11 @@ import { isPluginEnabled } from "@api/PluginManager";
 import { Settings, useSettings } from "@api/Settings";
 import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
+import { Heading } from "@components/Heading";
 import { FolderIcon, PaintbrushIcon, PencilIcon, PlusIcon, RestartIcon } from "@components/Icons";
 import { Link } from "@components/Link";
 import { Margins } from "@components/margins";
+import { Paragraph } from "@components/Paragraph";
 import { QuickAction, QuickActionCard } from "@components/settings/QuickAction";
 import { openPluginModal } from "@components/settings/tabs/plugins/PluginModal";
 import { UserThemeHeader } from "@main/themes";
@@ -18,7 +20,7 @@ import ClientThemePlugin from "@plugins/clientTheme";
 import { classNameFactory } from "@utils/css";
 import { t } from "@utils/locale";
 import { findLazy } from "@webpack";
-import { Forms, useEffect, useRef, useState } from "@webpack/common";
+import { useEffect, useRef, useState } from "@webpack/common";
 import type { ComponentType, Ref, SyntheticEvent } from "react";
 
 import { ThemeCard } from "./ThemeCard";
@@ -126,22 +128,22 @@ export function LocalThemesTab() {
     return (
         <Flex flexDirection="column" gap="1em">
             <Card>
-                <Forms.FormTitle tag="h5">{t("Find Themes:", "Где найти темы:")}</Forms.FormTitle>
+                <Heading>{t("Find Themes:", "Где найти темы:")}</Heading>
                 <Flex gap="0.4em" flexDirection="column" justifyContent="flex-start" className={Margins.bottom8}>
                     <span>&ndash; <Link href="https://betterdiscord.app/themes">{t("BetterDiscord theme list", "Каталог тем BetterDiscord")}</Link></span>
                     <span>&ndash; <Link href="https://github.com/search?q=discord+theme">GitHub</Link></span>
                 </Flex>
-                <Forms.FormText>{t("If using the BD site, click on \"Download\" and place the downloaded .theme.css file into your themes folder.", "На сайте BD нажмите «Download» и положите скачанный .theme.css в папку тем.")}</Forms.FormText>
+                <Paragraph>{t("If using the BD site, click on \"Download\" and place the downloaded .theme.css file into your themes folder.", "На сайте BD нажмите «Download» и положите скачанный .theme.css в папку тем.")}</Paragraph>
             </Card>
 
             <Card>
-                <Forms.FormTitle tag="h5">{t("External Resources", "Внешние ресурсы")}</Forms.FormTitle>
-                <Forms.FormText>{t("For security reasons, loading resources (styles, fonts, images, ...) from most sites is blocked.", "Из соображений безопасности загрузка ресурсов (стили, шрифты, картинки, ...) с большинства сайтов заблокирована.")}</Forms.FormText>
-                <Forms.FormText>{t("Make sure all your assets are hosted on GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts.", "Размещайте все ресурсы на GitHub, GitLab, Codeberg, Imgur, Discord или Google Fonts.")}</Forms.FormText>
+                <Heading>{t("External Resources", "Внешние ресурсы")}</Heading>
+                <Paragraph>{t("For security reasons, loading resources (styles, fonts, images, ...) from most sites is blocked.", "Из соображений безопасности загрузка ресурсов (стили, шрифты, картинки, ...) с большинства сайтов заблокирована.")}</Paragraph>
+                <Paragraph>{t("Make sure all your assets are hosted on GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts.", "Размещайте все ресурсы на GitHub, GitLab, Codeberg, Imgur, Discord или Google Fonts.")}</Paragraph>
             </Card>
 
             <section>
-                <Forms.FormTitle tag="h5">{t("Local Themes", "Локальные темы")}</Forms.FormTitle>
+                <Heading>{t("Local Themes", "Локальные темы")}</Heading>
                 <QuickActionCard>
                     <>
                         {IS_WEB ?

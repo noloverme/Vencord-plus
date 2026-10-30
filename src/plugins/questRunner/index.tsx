@@ -16,7 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { Button } from "@components/Button";
 import { Flex } from "@components/Flex";
+import { Paragraph } from "@components/Paragraph";
 import { Devs } from "@utils/constants";
 import { Margins } from "@utils/margins";
 import definePlugin from "@utils/types";
@@ -24,10 +26,8 @@ import type { RenderModalProps } from "@vencord/discord-types";
 import { find, findByProps, findStore } from "@webpack";
 import {
     ApplicationStreamingStore,
-    Button,
     ChannelStore,
     FluxDispatcher,
-    Forms,
     GuildChannelStore,
     Modal,
     openModal,
@@ -521,9 +521,9 @@ function QuestModal(props: RenderModalProps) {
             ]}
         >
             <Flex style={{ gap: 8, marginBottom: 12 }}>
-                <Button color={Button.Colors.GREEN} onClick={() => runQuests()} disabled={running}>Запустить</Button>
-                <Button color={Button.Colors.RED} onClick={() => stopQuests()} disabled={!running}>Остановить</Button>
-                <Button color={Button.Colors.PRIMARY} onClick={() => clearLogs()} disabled={logState.length === 0}>Очистить</Button>
+                <Button variant="positive" onClick={() => runQuests()} disabled={running}>Запустить</Button>
+                <Button variant="dangerPrimary" onClick={() => stopQuests()} disabled={!running}>Остановить</Button>
+                <Button variant="secondary" onClick={() => clearLogs()} disabled={logState.length === 0}>Очистить</Button>
             </Flex>
             <div
                 ref={logBoxRef}
@@ -545,9 +545,9 @@ function QuestModal(props: RenderModalProps) {
                     ? <span style={{ opacity: 0.6, color: "var(--text-muted)" }}>Логов пока нет. Нажми «Запустить».</span>
                     : logState.join("\n")}
             </div>
-            <Forms.FormText style={{ marginTop: 8 }} className={Margins.top8}>
+            <Paragraph style={{ marginTop: 8 }} className={Margins.top8}>
                 Плагин локальный, логи видны только тебе. Для видео-квестов работает в браузере, для PLAY/STREAM нужен десктоп.
-            </Forms.FormText>
+            </Paragraph>
         </Modal>
     );
 }
