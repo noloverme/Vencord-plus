@@ -20,7 +20,7 @@ export function NotificationSection() {
     useT();
     return (
         <section className={Margins.top16}>
-            <Heading>{t("Notifications", "Уведомления")}</Heading>
+            <Heading className={Margins.bottom8}>{t("Notifications", "Уведомления")}</Heading>
             <Paragraph className={Margins.bottom8}>
                 {t("Settings for Notifications sent by Vencord. This does NOT include Discord notifications (messages, etc)", "Настройки уведомлений от Vencord. Уведомления самого Discord (сообщения и т.д.) сюда не входят.")}
             </Paragraph>
@@ -54,10 +54,10 @@ function NotificationSettings() {
 
     return (
         <>
-            <Heading>{t("Notification Style", "Стиль уведомлений")}</Heading>
+            <Heading className={Margins.bottom8}>{t("Notification Style", "Стиль уведомлений")}</Heading>
             {settings.useNative !== "never" && Notification?.permission === "denied" && (
                 <ErrorCard style={{ padding: "1em" }} className={Margins.bottom8}>
-                    <Heading>{t("Desktop Notification Permission denied", "Нет разрешения на десктоп-уведомления")}</Heading>
+                    <Heading className={Margins.bottom8}>{t("Desktop Notification Permission denied", "Нет разрешения на десктоп-уведомления")}</Heading>
                     <Paragraph>{t("You have denied Notification Permissions. Thus, Desktop notifications will not work!", "Вы запретили уведомления. Десктоп-уведомления работать не будут!")}</Paragraph>
                 </ErrorCard>
             )}

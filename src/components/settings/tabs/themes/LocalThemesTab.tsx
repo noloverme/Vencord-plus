@@ -128,7 +128,7 @@ export function LocalThemesTab() {
     return (
         <Flex flexDirection="column" gap="1em">
             <Card>
-                <Heading>{t("Find Themes:", "Где найти темы:")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Find Themes:", "Где найти темы:")}</Heading>
                 <Flex gap="0.4em" flexDirection="column" justifyContent="flex-start" className={Margins.bottom8}>
                     <span>&ndash; <Link href="https://betterdiscord.app/themes">{t("BetterDiscord theme list", "Каталог тем BetterDiscord")}</Link></span>
                     <span>&ndash; <Link href="https://github.com/search?q=discord+theme">GitHub</Link></span>
@@ -137,13 +137,13 @@ export function LocalThemesTab() {
             </Card>
 
             <Card>
-                <Heading>{t("External Resources", "Внешние ресурсы")}</Heading>
+                <Heading className={Margins.bottom8}>{t("External Resources", "Внешние ресурсы")}</Heading>
                 <Paragraph>{t("For security reasons, loading resources (styles, fonts, images, ...) from most sites is blocked.", "Из соображений безопасности загрузка ресурсов (стили, шрифты, картинки, ...) с большинства сайтов заблокирована.")}</Paragraph>
                 <Paragraph>{t("Make sure all your assets are hosted on GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts.", "Размещайте все ресурсы на GitHub, GitLab, Codeberg, Imgur, Discord или Google Fonts.")}</Paragraph>
             </Card>
 
             <section>
-                <Heading>{t("Local Themes", "Локальные темы")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Local Themes", "Локальные темы")}</Heading>
                 <QuickActionCard>
                     <>
                         {IS_WEB ?

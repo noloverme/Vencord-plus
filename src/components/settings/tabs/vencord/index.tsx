@@ -212,7 +212,7 @@ function VencordSettings() {
             )}
 
             <section>
-                <Heading>{t("Quick Actions", "Быстрые действия")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Quick Actions", "Быстрые действия")}</Heading>
 
                 <QuickActionCard>
                     <QuickAction
@@ -254,7 +254,7 @@ function VencordSettings() {
             <Divider />
 
             <section className={Margins.top16}>
-                <Heading>{t("Settings", "Настройки")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Settings", "Настройки")}</Heading>
                 <Paragraph className={Margins.bottom20} style={{ color: "var(--text-muted)" }}>
                     {t("Hint: You can change the position of this settings section in the ", "Подсказка: положение этого раздела можно изменить в ")}{" "}
                     <a onClick={() => openPluginModal(SettingsPlugin)}>

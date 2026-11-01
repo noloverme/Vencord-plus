@@ -20,7 +20,7 @@ export function WindowsMaterialSettings() {
 
     return (
         <ErrorBoundary noop>
-            <Heading>{t("Background Material", "Материал фона")}</Heading>
+            <Heading className={Margins.bottom8}>{t("Background Material", "Материал фона")}</Heading>
             <Paragraph className={Margins.bottom8}>
                 {t("Windows transparent background effects. You need a theme that supports transparency or this will do nothing. A restart is required after changing this setting.", "Прозрачные эффекты фона Windows. Нужна тема с поддержкой прозрачности, иначе не сработает. После смены настройки нужен перезапуск.")}
             </Paragraph>

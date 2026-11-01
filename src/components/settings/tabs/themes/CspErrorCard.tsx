@@ -47,7 +47,7 @@ export function CspErrorCard() {
 
     return (
         <ErrorCard>
-            <Heading>{t("Blocked Resources", "Заблокированные ресурсы")}</Heading>
+            <Heading className={Margins.bottom8}>{t("Blocked Resources", "Заблокированные ресурсы")}</Heading>
             <Paragraph>{t("Some images, styles, or fonts were blocked because they come from disallowed domains.", "Некоторые картинки, стили или шрифты заблокированы — они с неразрешённых доменов.")}</Paragraph>
             <Paragraph>{t("It is highly recommended to move them to GitHub or Imgur. But you may also allow domains if you fully trust them.", "Рекомендуется перенести их на GitHub или Imgur. Но можно и разрешить домены, если полностью им доверяете.")}</Paragraph>
             <Paragraph>

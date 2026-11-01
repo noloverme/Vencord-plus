@@ -20,7 +20,7 @@ export function MacOSVibrancySettings() {
 
     return (
         <ErrorBoundary noop>
-            <Heading>{t("MacOS Window vibrancy style (requires restart)", "Стиль вибрации окна MacOS (нужен перезапуск)")}</Heading>
+            <Heading className={Margins.bottom8}>{t("MacOS Window vibrancy style (requires restart)", "Стиль вибрации окна MacOS (нужен перезапуск)")}</Heading>
             <Select
                 className={Margins.bottom20}
                 placeholder={t("Window vibrancy style", "Стиль вибрации окна")}

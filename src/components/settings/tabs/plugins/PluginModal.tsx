@@ -24,7 +24,6 @@ import { useSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Heading } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
-import { Text } from "@components/Text";
 import { debounce } from "@shared/debounce";
 import { gitRemote } from "@shared/vencordUserAgent";
 import { classNameFactory } from "@utils/css";
@@ -177,7 +176,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
             size="lg"
             title={
                 <div className={cl("header")}>
-                    <Text tag="h1" weight="semibold" size="lg">{plugin.name}</Text>
+                    <Heading tag="h3">{plugin.name}</Heading>
                     {!pluginMeta.userPlugin && (
                         <div className="vc-settings-modal-links">
                             <FavoriteButton
@@ -207,7 +206,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
         >
             <div className={"vc-settings-modal-content"}>
                 <section>
-                    <Heading tag="h1" className={classes(Margins.top8, Margins.bottom8)}>{t("Authors", "Авторы")}</Heading>
+                    <Heading tag="h3" className={classes(Margins.top8, Margins.bottom8)}>{t("Authors", "Авторы")}</Heading>
                     <div style={{ width: "fit-content" }}>
                         <ErrorBoundary noop>
                             <UserSummaryItem
@@ -246,7 +245,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                 )}
 
                 <section>
-                    <Heading tag="h1" className={classes(Margins.top16, Margins.bottom8)}>{t("Settings", "Настройки")}</Heading>
+                    <Heading tag="h3" className={classes(Margins.top16, Margins.bottom8)}>{t("Settings", "Настройки")}</Heading>
                     {renderSettings()}
                 </section>
             </div>

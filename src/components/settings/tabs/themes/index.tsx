@@ -68,7 +68,7 @@ function ThemesTab() {
                 <CspErrorCard />
 
                 <Card variant="warning">
-                    <Heading tag="h3" className={Margins.bottom8}>{t("Theme Performance", "Производительность тем")}</Heading>
+                    <Heading className={Margins.bottom8}>{t("Theme Performance", "Производительность тем")}</Heading>
                     <Paragraph>
                         {t("Themes and custom CSS have the potential to cause major lag! If you experience performance issues, try disabling your themes and CSS to see if they're the cause. The most common cause of lag is the ", "Темы и кастомный CSS могут сильно лагать! При проблемах с производительностью попробуйте отключить темы и CSS. Чаще всего виноват оператор ")}<code>:has()</code>.
                     </Paragraph>
@@ -85,7 +85,7 @@ function UserscriptThemesTab() {
     return (
         <SettingsTab>
             <Card variant="danger">
-                <Heading>{t("Themes are not supported on the Userscript!", "Темы не поддерживаются в юзерскрипте!")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Themes are not supported on the Userscript!", "Темы не поддерживаются в юзерскрипте!")}</Heading>
 
                 <Paragraph>
                     {t("You can instead install themes with the ", "Вместо этого ставьте темы через ")}<Link href={getStylusWebStoreUrl()}>{t("Stylus extension", "расширение Stylus")}</Link>!

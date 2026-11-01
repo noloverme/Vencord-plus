@@ -45,7 +45,7 @@ function VesktopSection() {
     return (
         <Flex className={Margins.bottom20} flexDirection="column" gap="1em">
             <Card variant="info">
-                <Heading tag="h3">Vesktop & Vencord</Heading>
+                <Heading className={Margins.bottom8}>Vesktop & Vencord</Heading>
                 <Paragraph>{t("Vesktop and Vencord are two separate things. This updater is for Vencord.", "Vesktop и Vencord — разные вещи. Этот апдейтер — для Vencord.")}</Paragraph>
                 <Paragraph className={Margins.top8}>
                     {t("You receive separate popups for Vesktop updates. You can also manually update by installing the ", "Обновления Vesktop приходят отдельно. Можно обновиться вручную, установив ")}<Link href="https://vesktop.dev/install">{t("latest version", "последнюю версию")}</Link>.
@@ -54,7 +54,7 @@ function VesktopSection() {
 
             {isVesktopOutdated && (
                 <Card variant="warning">
-                    <Heading tag="h3">{t("Vesktop Outdated", "Vesktop устарел")}</Heading>
+                    <Heading className={Margins.bottom8}>{t("Vesktop Outdated", "Vesktop устарел")}</Heading>
                     <Flex flexDirection="column" gap="0.5em">
                         <Paragraph>{t("Your version of Vesktop is outdated!", "Ваша версия Vesktop устарела!")}</Paragraph>
                         <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>{t("Open Vesktop Updater", "Открыть апдейтер Vesktop")}</Button>
@@ -101,7 +101,7 @@ function Updater() {
                 />
             </div>
 
-            <Heading className={Margins.top20}>{t("Repo", "Репозиторий")}</Heading>
+            <Heading className={classes(Margins.top20, Margins.bottom8)}>{t("Repo", "Репозиторий")}</Heading>
 
             <Paragraph>
                 {repoPending
@@ -120,7 +120,7 @@ function Updater() {
 
             <Divider className={classes(Margins.top16, Margins.bottom16)} />
 
-            <Heading>{t("Updates", "Обновления")}</Heading>
+            <Heading className={Margins.bottom8}>{t("Updates", "Обновления")}</Heading>
 
             {isNewer
                 ? <Newer {...commonProps} />

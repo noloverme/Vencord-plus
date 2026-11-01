@@ -130,7 +130,7 @@ function PluginSettings() {
         if (changes.hasChanges)
             promptToRestart("reload", {
                 children: <>
-                    <Heading>{t("The following plugins require a restart:", "Эти плагины требуют перезапуска:")}</Heading>
+                    <Heading className={Margins.bottom8}>{t("The following plugins require a restart:", "Эти плагины требуют перезапуска:")}</Heading>
                     <Paragraph>{Array.from(changes, k => k.split(".")[0]).join(", ")}</Paragraph>
                 </>
             });

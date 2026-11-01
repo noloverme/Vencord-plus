@@ -26,6 +26,7 @@ import { debounce } from "@shared/debounce";
 import { copyWithToast } from "@utils/discord";
 import { t } from "@utils/locale";
 import { Margins } from "@utils/margins";
+import { classes } from "@utils/misc";
 import { stripIndent } from "@utils/text";
 import { ReplaceFn } from "@utils/types";
 import { search } from "@webpack";
@@ -107,7 +108,7 @@ function PatchHelper() {
 
     return (
         <SettingsTab>
-            <Heading>{t("Full patch", "Полный патч")}</Heading>
+            <Heading className={Margins.bottom8}>{t("Full patch", "Полный патч")}</Heading>
             <FullPatchInput
                 setFind={onFindChange}
                 setParsedFind={setParsedFind}
@@ -115,7 +116,7 @@ function PatchHelper() {
                 setReplacement={setReplacement}
             />
 
-            <Heading className={Margins.top8}>Find</Heading>
+            <Heading className={classes(Margins.top8, Margins.bottom8)}>Find</Heading>
             <TextInput
                 type="text"
                 value={find}
@@ -123,7 +124,7 @@ function PatchHelper() {
                 error={findError}
             />
 
-            <Heading className={Margins.top8}>Match</Heading>
+            <Heading className={classes(Margins.top8, Margins.bottom8)}>Match</Heading>
             <TextInput
                 type="text"
                 value={match}
@@ -150,7 +151,7 @@ function PatchHelper() {
 
             {!!(find && match && replacement) && (
                 <>
-                    <Heading className={Margins.top20}>{t("Code", "Код")}</Heading>
+                    <Heading className={classes(Margins.top20, Margins.bottom8)}>{t("Code", "Код")}</Heading>
                     <CodeBlock lang="js" content={code} />
                     <Flex className={Margins.top16}>
                         <Button onClick={() => copyWithToast(code)}>

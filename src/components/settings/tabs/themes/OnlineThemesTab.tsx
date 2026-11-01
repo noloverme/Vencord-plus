@@ -8,6 +8,7 @@ import { useSettings } from "@api/Settings";
 import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
 import { Heading } from "@components/Heading";
+import { Margins } from "@components/margins";
 import { Paragraph } from "@components/Paragraph";
 import { t } from "@utils/locale";
 import { TextArea, useState } from "@webpack/common";
@@ -36,14 +37,14 @@ export function OnlineThemesTab() {
                 </Paragraph>
             </Card>
             <Card>
-                <Heading>{t("Paste links to css files here", "Вставьте сюда ссылки на css-файлы")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Paste links to css files here", "Вставьте сюда ссылки на css-файлы")}</Heading>
                 <Paragraph>{t("One link per line", "По одной ссылке на строку")}</Paragraph>
                 <Paragraph>{t("You can prefix lines with @light or @dark to toggle them based on your Discord theme", "Строки можно начинать с @light или @dark, чтобы переключать по теме Discord")}</Paragraph>
                 <Paragraph>{t("Make sure to use direct links to files (raw or github.io)!", "Используйте прямые ссылки на файлы (raw или github.io)!")}</Paragraph>
             </Card>
 
             <section>
-                <Heading>{t("Online Themes", "Онлайн-темы")}</Heading>
+                <Heading className={Margins.bottom8}>{t("Online Themes", "Онлайн-темы")}</Heading>
                 <TextArea
                     value={themeText}
                     onChange={setThemeText}
